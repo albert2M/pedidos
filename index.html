@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script type="module" src="/src/index.js"></script>
+    <script type="module" src="/src/index.js"></script> <!--Estas etiquetas cargan archivos JS. 
+      Este atributo type en particular hace que la carga de la página no se bloquee al cargar 
+      un archivo JS muy grande. El archivo JS index,js es el que llamará a todos los archivos 
+      JS que haya, en concreto a los componentes--> 
   </head>
   <body>
     <title-component></title-component>
