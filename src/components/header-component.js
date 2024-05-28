@@ -17,6 +17,15 @@ class header extends HTMLElement {
       this.shadow.innerHTML =
       /*html*/`
         <style>
+          *{
+            box-sizing: border-box;
+          }
+
+          body {
+            margin: 0;
+            width: 100%
+          }
+
           header {
             background-color: hsl(0, 0%, 0%);
             width: 100%;
@@ -25,20 +34,22 @@ class header extends HTMLElement {
           }
 
           .title h2{
-            font-family: "Poppins", sans-serif;
+            font-family: "Lato", sans-serif;
             text-transform: capitalize;
-            font-size: 2rem;
-            font-weight: 500;
+            font-size: 1.2rem;
+            font-weight: 600;
             margin: 0;
             color: hsl(208, 100%, 97%);
           }
         </style>
-  
-         <header>
-            <div class="title">
-              <h2>Inicio</h2> 
-            </div>
+
+        
+        <header>
+          <div class="title">
+            <h2>Inicio</h2> 
+          </div>
         </header>
+              
         `
       }
   }

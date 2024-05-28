@@ -20,7 +20,7 @@ class Title extends HTMLElement {
           }
           
           h2 {
-            font-family: "Poppins", sans-serif;
+            font-family: "Lato", sans-serif;
             text-transform: capitalize;
             font-size: 2rem;
             font-weight: 500;

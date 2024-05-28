@@ -33,7 +33,7 @@ class Login extends HTMLElement {
 
           .form-element-label {
             color: hsl(0, 0%, 100%);
-            font-family: "Poppins", sans-serif;
+            font-family: "Lato", sans-serif;
           }
           
           .form-element-input input{
