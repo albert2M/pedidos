@@ -1,7 +1,8 @@
-class header extends HTMLElement {
+class Header extends HTMLElement {
     constructor () {
       super()
       this.shadow = this.attachShadow({ mode: 'open' })
+      this.title = this.getAttribute('title')
     }
   
     connectedCallback () {
@@ -39,14 +40,14 @@ class header extends HTMLElement {
             font-size: 1.2rem;
             font-weight: 600;
             margin: 0;
-            color: hsl(208, 100%, 97%);
+            color: hsl(208, 100%, 97%); 
           }
         </style>
 
         
         <header>
           <div class="title">
-            <h2>Inicio</h2> 
+            <h2>${this.title}</h2> 
           </div>
         </header>
               
@@ -54,4 +55,4 @@ class header extends HTMLElement {
       }
   }
   
-  customElements.define('header-component', header)
+  customElements.define('header-component', Header)

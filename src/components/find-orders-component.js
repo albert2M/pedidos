@@ -126,6 +126,7 @@ class FindOrders extends HTMLElement {
           .see-order {
             font-family: "Lato", sans-serif;
             font-weight: 600;
+            font-size: 3rem
             padding: 0.2rem 1rem;
           }
         
