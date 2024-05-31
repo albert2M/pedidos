@@ -2,10 +2,35 @@ class FindOrders extends HTMLElement {
     constructor () {
       super()
       this.shadow = this.attachShadow({ mode: 'open' })
+      this.data = []
     }
   
-    connectedCallback () {
-      this.render()
+    async connectedCallback () {
+      await this.loadData()
+      await this.render()
+    }
+
+    loadData () {
+      this.data = [
+        {
+          "referenceNumber": "0000000002",
+          "total": "180",
+          "date": "20-05-2024",
+          "time": "11:13"
+        },
+        {
+          "referenceNumber": "0000000003",
+          "total": "270",
+          "date": "13-05-2024",
+          "time": "17:09"
+        },
+        {
+          "referenceNumber": "0000000002",
+          "total": "270",
+          "date": "13-05-2024",
+          "time": "17:09"
+        }
+      ]
     }
   
     render () {

@@ -2,10 +2,25 @@ class Order extends HTMLElement {
     constructor () {
       super()
       this.shadow = this.attachShadow({ mode: 'open' })
+      this.data = []
     }
   
-    connectedCallback () {
-      this.render()
+    async aconnectedCallback () {
+      await this.loadData()
+      await this.render()
+    }
+
+    loadData () {
+      this.data = [
+        {
+          "title": "cocacola",  
+          "price": 90,
+          "unities": 16,
+          "sizeNumber": 330,
+          "measurementUnit": "ml",
+          "quantity": 2
+        },
+      ]
     }
   
     render () {

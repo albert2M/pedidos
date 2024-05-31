@@ -2,6 +2,11 @@ class Title extends HTMLElement {
     constructor () {
       super()
       this.shadow = this.attachShadow({ mode: 'open' })
+      this.textAlign = this.getAttribute('text-align')
+      this.color= this.getAttribute("color")
+      this.fontSize = this.getAttribute('font-size')
+      this.title = this.getAttribute('title')
+      
     }
   
     connectedCallback () {
@@ -11,27 +16,19 @@ class Title extends HTMLElement {
     render () {
       this.shadow.innerHTML =
       /*html*/`
-        <style>
-          .title {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            align-items: center
-          }
-          
+        <style>    
           h2 {
             font-family: "Lato", sans-serif;
-            text-transform: capitalize;
-            font-size: 2rem;
+            font-size: ${this.fontSize};
             font-weight: 500;
             margin: 0;
-            color: hsl(208, 100%, 97%);
-            text-align: center;
+            color: ${this.color};
+            text-align: ${this.textAlign};
           }
         </style>
   
         <div class="title">
-            <h2>Pedidos</h2>
+            <h2>${this.title}</h2>
         </div>
         `
       }

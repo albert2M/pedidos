@@ -8,7 +8,12 @@
     <script type="module" src="/src/index.js"></script>
   </head>
   <body>
-    <header-component></header-component>
+    <header-component justify-content="space-between">
+      <title-component text-align="left" color="white" title="Resumen de tu pedidos" font-size="1"></title-component>
+      <header-icon-component>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+      </header-icon-component>
+    </header-component>
     <main>
       <summary-component></summary-component>
     </main>

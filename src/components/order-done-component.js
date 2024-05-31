@@ -2,10 +2,18 @@ class OrderDone extends HTMLElement {
     constructor () {
       super()
       this.shadow = this.attachShadow({ mode: 'open' })
+      this.data = []
     }
   
-    connectedCallback () {
-      this.render()
+    async connectedCallback () {
+      await this.loadData()
+      await this.render()
+    }
+
+    loadData () {
+      this.data = {
+        "referenceNumber": "0000000002"
+      }
     }
   
     render () {
@@ -60,7 +68,7 @@ class OrderDone extends HTMLElement {
           <h2>Pedido realizado con éxito</h2>
           <p>
               En breve recibirá un correo con los detalles. 
-              La referencia de su pedido es 0000000002
+              La referencia de su pedido es ${this.data.referenceNumber}
           </p>    
         </div>
         <div class="back-home">

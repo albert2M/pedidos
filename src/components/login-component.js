@@ -10,8 +10,8 @@ class Login extends HTMLElement {
   
     render () {
       this.shadow.innerHTML =
-      /*html*/
-        `
+      /*html*/ `
+       
         <style>
 
           *{

@@ -22,7 +22,7 @@ class Menu extends HTMLElement {
           }
 
           .menu-item {
-                width: 80%;
+            width: 80%;
           }
 
           button {

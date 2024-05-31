@@ -2,10 +2,35 @@ class Summary extends HTMLElement {
     constructor () {
       super()
       this.shadow = this.attachShadow({ mode: 'open' })
+      this.data = []
     }
   
-    connectedCallback () {
-      this.render()
+    async connectedCallback () {
+      await this.loadData()
+      await this.render()
+    }
+
+    loadData () {
+      this.data = [
+        {
+          "title": "Cocacola",  
+          "total": 180,
+          "unities": 16,
+          "sizeNumber": 330,
+          "measurementUnit": "ml",
+          "quantity": 2,
+          "unityPrice": 90
+        },
+        {
+          "title": "cafe",  
+          "total": 250,
+          "unities": 10,
+          "sizeNumber": 500,
+          "measurementUnit": "gr",
+          "quantity": 5,
+          "unityPrice": 50
+        }
+      ]
     }
   
     render () {
