@@ -28,12 +28,7 @@ class Header extends HTMLElement {
         </style>
 
         <header>
-          <slot></slot> <!-Al no poner nombre al slot, 
-          todo lo que se le meta al header en el index.html lo cojerá.
-          Cuando dentro del component hay varios divs o espacios difernciados
-          y quiero poner detrminado contenido dentro de ellos, entonces
-          habría que poner nombre a los slots, o sea <slot class="algo"></slot> 
-          para que vaya a ese slot en especial -> 
+          <slot></slot>
         </header> 
         `
       }
