@@ -143,7 +143,7 @@ class Order extends HTMLElement {
             }
           </style>
   
-          <section class="products"></section>
+          <section class="products"></section> <!-Aquí solo se deja el contenedor y aquello que no cambie. Lo que cambia se construye con JS dinámicamente->
 
           <div class="button-order">
             <button name="see-order">
@@ -152,7 +152,8 @@ class Order extends HTMLElement {
           </div>
         `
 
-        const products = this.shadow.querySelector(".products")
+        const products = this.shadow.querySelector(".products") /*En a constante products se mete la clase .products, que es seleccionada mediante querySelector 
+                                                                de this.shadow*/ 
 
         this.data.forEach(product => {
 
