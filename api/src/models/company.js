@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const User = sequelize.define('User',
+    const Company = sequelize.define('Company',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -7,12 +7,24 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
           primaryKey: true,
           allowNull: false
         },
-        name: {
+        commercialName: {
           type: DataTypes.STRING,
           allowNull: false
         },
-        email: {
+        fiscallName: {
           type: DataTypes.STRING,
+          allowNull: false
+        },
+        commercialAddress: {
+          type:  DataTypes.STRING,
+          allowNull: false
+        },
+        fiscalAddress: {
+          type:  DataTypes.STRING,
+          allowNull: false
+        },
+        vatNumber: {
+          type:  DataTypes.STRING,
           allowNull: false
         },
         createdAt: {
@@ -23,7 +35,7 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
         }
       }, {
         sequelize,
-        tableName: 'users',
+        tableName: 'companies',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -39,9 +51,9 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
       }
     )
   
-    User.associate = function (models) { //Aqui van las relaciones con otros modelos
+    Company.associate = function (models) {
      
     }
   
-    return User
+    return Company
   }
