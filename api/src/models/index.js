@@ -11,7 +11,7 @@ const sequelizeDb = {}
 const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
 
   host: process.env.DATABASE_HOST,
-  dialect: process.env.DATABASE_HOST, //'mysql',
+  dialect: 'mysql',  //process.env.DATABASE_DIALECT, (este no me funciona)
 
   pool: {
     max: 5,
