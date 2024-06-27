@@ -8,7 +8,7 @@ module.exports = (app) => { //Exporto una función a la que le paso como paráme
     router.get('/:id', controller.findOne)
     router.put('/:id', controller.update)
     router.delete('/:id', controller.delete)
-  //Las cuatro lineas anteriores serían los endpoints
+  //Las cuatro lineas anteriores serían los endpoints a los cuales puedo llamar
     app.use('/api/admin/companies', router) // Hey app! Usa esta url básica, con los anteriores endpoints ("roter")
   }
 
