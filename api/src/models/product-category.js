@@ -36,8 +36,8 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
       }
     )
   
-    ProductCategory.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    ProductCategory.associate = function (models) { 
+      ProductCategory.hasMany(models.Product, { as: 'products', foreignKey: 'productCategoryId' })
     }
   
     return ProductCategory

@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('returs', {
+    await queryInterface.createTable('returns', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -12,11 +12,23 @@ module.exports = {
       },
       saleId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'sales',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'NO ACTION'
       },
       customerId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'customers',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'NO ACTION'
       },
       reference: {
         type: Sequelize.STRING,
@@ -46,10 +58,18 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
+
+    await queryInterface.addIndex('returns', ['saleId'], {
+      name: 'returns_saleId_index'
+    }) 
+
+    await queryInterface.addIndex('returns', ['customerId'], {
+      name: 'returns_customerId_index'
+    }) 
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('returs')
+    await queryInterface.dropTable('returns')
   }
 }
 

@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const User_Credentials = sequelize.define('User_Credentials',
+    const UserCredential = sequelize.define('UserCredential',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -31,7 +31,7 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
         }
       }, {
         sequelize,
-        tableName: 'users_credentials',
+        tableName: 'user_credentials',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -42,14 +42,22 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'user_credentials_userId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'userId' }
+            ]
           }
+
         ]
       }
     )
   
-    User_Credentials.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    UserCredential.associate = function (models) { 
+      UserCredential.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
     }
   
-    return User_Credentials
+    return UserCredential
   }

@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const Sale_Details = sequelize.define('Sale_Details',
+    const SaleDetail = sequelize.define('SaleDetail',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -39,7 +39,7 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
         }
       }, {
         sequelize,
-        tableName: 'sales_details',
+        tableName: 'sale_details',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -50,14 +50,37 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'sale_details_saleId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'saleId' }
+            ]
+          },
+          {
+            name: 'sale_details_productId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'productId' }
+            ]
+          },
+          {
+            name: 'sale_details_priceId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'priceId' }
+            ]
           }
         ]
       }
     )
   
-    Sale_Details.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    SaleDetail.associate = function (models) { 
+      SaleDetail.belongsTo(models.Sale, { as: 'sale', foreignKey: 'saleId' })
+      SaleDetail.belongsTo(models.Product, { as: 'product', foreignKey: 'productId' })
+      SaleDetail.belongsTo(models.Price, { as: 'price', foreignKey: 'priceId' })
     }
   
-    return Sale_Details
+    return SaleDetail
   }

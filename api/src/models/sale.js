@@ -35,7 +35,7 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
         }
       }, {
         sequelize,
-        tableName: 'Sales',
+        tableName: 'sales',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -46,13 +46,23 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'sales_customerId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'customerId' }
+            ]
           }
         ]
       }
     )
   
-    Sale.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    Sale.associate = function (models) { 
+      Sale.belongsTo(models.Customer, { as: 'customer', foreignKey: 'customerId' })
+      Sale.hasMany(models.Return, { as: 'returns', foreignKey: 'saleId' })
+      Sale.hasMany(models.SaleDetail, { as: 'saleDetails', foreignKey: 'saleId' })
+      Sale.belongsToMany(models.Product, { through: models.SaleDetail, as: 'products', foreignKey: 'saleId' })
     }
   
     return Sale

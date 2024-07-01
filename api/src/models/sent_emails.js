@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const Sent_Emails = sequelize.define('Sent_Emails',
+    const SentEmail = sequelize.define('SentEmail',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -50,14 +50,21 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'sent_emails_userId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'userId' }
+            ]
           }
         ]
       }
     )
   
-    Sent_Emails.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    SentEmail.associate = function (models) { 
+      SentEmail.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
     }
   
-    return Sent_Emails
+    return SentEmail
   }

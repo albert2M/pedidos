@@ -66,13 +66,22 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'products_productCategoryId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'productCategoryId' }
+            ]
           }
         ]
       }
     )
   
-    Product.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    Product.associate = function (models) {
+      Product.belongsTo(models.ProductCategory, { as: 'productCategory', foreignKey: 'productCategoryId' })
+      Product.hasMany(models.Price, { as: 'prices', foreignKey: 'productId' })
+      Product.hasMany(models.SaleDetail, { as: 'saleDetails', foreignKey: 'productId' })
     }
   
     return Product

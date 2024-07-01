@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const Email_Errors = sequelize.define('Email_Errors',
+    const EmailErrors = sequelize.define('EmailErrors',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -43,9 +43,9 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
       }
     )
   
-    Email_Errors.associate = function (models) { //Aqui van las relaciones con otros modelos
+    EmailErrors.associate = function (models) { //Aqui van las relaciones con otros modelos
      
     }
   
-    return Email_Errors
+    return EmailErrors
   }

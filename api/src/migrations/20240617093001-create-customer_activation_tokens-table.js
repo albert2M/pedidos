@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('customers_activation_tokens', {
+    await queryInterface.createTable('customer_activation_tokens', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -12,7 +12,13 @@ module.exports = {
       },
       customerId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'customers',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'NO ACTION'
       },
       token: {
         type: Sequelize.STRING,
@@ -38,10 +44,15 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
+
+    await queryInterface.addIndex('customer_activation_tokens', ['customerId'], {
+      name: 'customer_activation_tokens_customerId_index'
+    }) 
+
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('customers_activation_tokens')
+    await queryInterface.dropTable('customer_activation_tokens')
   }
 }
 

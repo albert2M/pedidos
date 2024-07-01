@@ -12,7 +12,13 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'NO ACTION'
       },
       userType: {
         type: Sequelize.STRING,
@@ -46,6 +52,11 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
+
+    await queryInterface.addIndex('sent_emails', ['userId'], {
+      name: 'sent_emails_userId_index'
+    }) 
+
   },
 
   down: async (queryInterface, Sequelize) => {

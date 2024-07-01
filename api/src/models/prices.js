@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const Prices = sequelize.define('Prices',
+    const Price = sequelize.define('Price',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -38,14 +38,23 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
-          }
+          },
+          {
+            name: 'prices_productId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'productId' }
+            ]
+          } 
+
         ]
       }
     )
   
-    Prices.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    Price.associate = function (models) { 
+      Price.belongsTo(models.Product, { as: 'product', foreignKey: 'productId' })
+      Price.hasMany(models.SaleDetail, { as: 'saleDetails', foreignKey: 'priceId' })
     }
   
-    return Prices
+    return Price
   }

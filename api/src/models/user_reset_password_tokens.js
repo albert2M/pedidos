@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const User_Reset_Password_Tokens = sequelize.define('User_Reset_Password_Tokens',
+    const UserResetPasswordToken = sequelize.define('UserResetPasswordToken',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -31,7 +31,7 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
         }
       }, {
         sequelize,
-        tableName: 'users',
+        tableName: 'user_reset_password_tokens',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -42,14 +42,22 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'user_reset_password_tokens_userId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'userId' }
+            ]
           }
+
         ]
       }
     )
   
-    User_Reset_Password_Tokens.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    UserResetPasswordToken.associate = function (models) { 
+      UserResetPasswordToken.belongsTo(models.User, { as: 'user', foreignKey: 'userId' })
     }
   
-    return User_Reset_Password_Tokens
+    return UserResetPasswordToken
   }

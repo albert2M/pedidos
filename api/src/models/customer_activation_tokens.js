@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const Customer_Ativation_Tokens = sequelize.define('Customer_Ativation_Tokens',
+    const CustomerActivationToken = sequelize.define('CustomerActivationToken',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -31,7 +31,7 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
         }
       }, {
         sequelize,
-        tableName: 'customers_activation_tokens',
+        tableName: 'customer_activation_tokens',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -42,14 +42,21 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'customers_customerId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'customerId' }
+            ]
           }
         ]
       }
     )
   
-    Customer_Ativation_Tokens.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    CustomerActivationToken.associate = function (models) { 
+      CustomerActivationToken.belongsTo(models.Customer, { as: 'customer', foreignKey: 'customerId' })
     }
   
-    return Customer_Ativation_Tokens
+    return CustomerActivationToken
   }

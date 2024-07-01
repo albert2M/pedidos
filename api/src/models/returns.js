@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const Returns = sequelize.define('Returns',
+    const Return = sequelize.define('Return',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -24,7 +24,7 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
           allowNull: false
         },
         returnDate: {
-          type: DataTypese.DATEONLY,
+          type: DataTypes.DATEONLY,
           allowNull: false
         },
         returnTime: {
@@ -50,14 +50,29 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'returns_saleId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'saleId' }
+            ]
+          },
+          {
+            name: 'returns_customerId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'customerId' }
+            ]
           }
         ]
       }
     )
   
-    Returns.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    Return.associate = function (models) { 
+      Return.belongsTo(models.Sale, { as: 'sale', foreignKey: 'saleId' })
+      Return.belongsTo(models.Customer, { as: 'customer', foreignKey: 'customerId' })
     }
   
-    return Returns
+    return Return
   }

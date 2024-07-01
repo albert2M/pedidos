@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const Customer_Credentials = sequelize.define('Customer_Credentials',
+    const CustomerCredentials = sequelize.define('CustomerCredentials',
       {
         id: {
           type: DataTypes.INTEGER,
@@ -42,14 +42,21 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'customers_credentials_customerId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'customerId' }
+            ]
           }
         ]
       }
     )
   
-    Customer_Credentials.associate = function (models) { //Aqui van las relaciones con otros modelos
-     
+    CustomerCredentials.associate = function (models) { 
+      CustomerCredentials.belongsTo(models.Customer, { as: 'customer', foreignKey: 'customerId' })
     }
   
-    return Customer_Credentials
+    return CustomerCredentials
   }
