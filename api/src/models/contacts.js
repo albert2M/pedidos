@@ -1,10 +1,14 @@
 module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const Customer = sequelize.define('Customer',
+    const Contact = sequelize.define('Contact',
       {
         id: {
           type: DataTypes.INTEGER,
           autoIncrement: true,
           primaryKey: true,
+          allowNull: false
+        },
+        fingerprintId: {
+          type: DataTypes.STRING,
           allowNull: false
         },
         name: {
@@ -15,6 +19,14 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
           type: DataTypes.STRING,
           allowNull: false
         },
+        subject: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        message: {
+          type: DataTypes.TEXT,
+          allowNull: false
+        },
         createdAt: {
           type: DataTypes.DATE
         },
@@ -23,7 +35,7 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
         }
       }, {
         sequelize,
-        tableName: 'customers',
+        tableName: 'contacts',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -34,19 +46,21 @@ module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y
             fields: [
               { name: 'id' }
             ]
+          },
+          {
+            name: 'contacts_fingerprintId_fk',
+            using: 'BTREE',
+            fields: [
+              { name: 'fingerprintId' }
+            ]
           }
         ]
       }
     )
   
-    Customer.associate = function (models) { 
-      Customer.hasMany(models.CustomerActivationToken, { as: 'customerActivationTokens', foreignKey: 'customerId' })
-      Customer.hasMany(models.CustomerCredentials, { as: 'customerCredentials', foreignKey: 'customerId' })
-      Customer.hasMany(models.CustomerResetPasswordToken, { as: 'customerResetPasswordTokens', foreignKey: 'customerId' })
-      Customer.hasMany(models.Return, { as: 'returns', foreignKey: 'customerId' })
-      Customer.hasMany(models.Sale, { as: 'sales', foreignKey: 'customerId' })
-      Customer.hasMany(models.Fingerprint, { as: 'fingerprints', foreignKey: 'customerId' })
+    Contact.associate = function (models) { 
+      Contact.belongsTo(models.Fingerprint, { as: 'fingerprint', foreignKey: 'fingerprintId' })
     }
   
-    return Customer
+    return Contact
   }
