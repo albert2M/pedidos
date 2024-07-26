@@ -28,7 +28,7 @@ class Title extends HTMLElement {
           h2 {
             font-family: "Lato", sans-serif;
             font-size: ${this.fontSize};  /*${this.fontSize} Esto hace qu el atributo sea una variable capturable en el constructor */
-            font-weight: 500;
+            font-weight: 700;
             margin: 0;
             color: ${this.color};
             text-align: ${this.textAlign};

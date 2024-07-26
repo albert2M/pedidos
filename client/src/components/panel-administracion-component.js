@@ -13,25 +13,22 @@ class Cads extends HTMLElement {
   loadData () {
       this.data = [
         {
-          "title": "Gratis",
-          "price": "$0",  
-          "month": "/mes",
-          "content": ['10 usuarios incluidos', '2 GB de almacenamiento', 'Soporte de correo electrónico', 'Acceso al centro de ayuda'],
-          "button": "Regístrate gratis"      
+          "nombre": "Alberto",
+          "email": "albertomorenomartinez@gmail.com",  
+          "fecha_creacion": "2024-04-22",
+          "fecha_actualizacion": "2024-04-22"      
         },
         {
-          "title": "Pro",  
-          "price": "$15",  
-          "month": "/mes",
-          "content": ['20 usuarios incluidos', '10 GB de almacenamiento', 'Soporte prioritario por correo electrónico', 'Acceso al centro de ayuda'],
-          "button": "Empezar"
+          "nombre": "Carlos",
+          "email": "carlossedagambin@gmail.com",  
+          "fecha_creacion": "2024-04-22",
+          "fecha_actualizacion": "2024-04-22"
         },
         {
-          "title": "Empresa",  
-          "price": "$29",  
-          "month": "/mes",
-          "content": ['30 usuarios incluidos', '15 GB de almacenamiento', 'Soporte telefónico y por correo electrónico', 'Acceso al centro de ayuda'],
-          "button": "Contáctenos"
+          "nombre": "Carlos",
+          "email": "carlossedagambin@gmail.com",  
+          "fecha_creacion": "2024-04-22",
+          "fecha_actualizacion": "2024-04-22"
         }
 
       ]
@@ -64,107 +61,12 @@ this.shadow.innerHTML =
         color: grey
       }
 
-      .cards {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        justify-content:center;       
-        gap: 2rem;
-        padding: 0 20rem
-      }
-
-      .card {
-        border: 1px solid #c6c6c6;
-        color: white;
-        border-radius: 0.5rem;
-        height: fit-content ;
-      }
-
-      .special-card {
-        border: 1px solid #0D6EFD;
-        color: white;
-        border-radius: 0.5rem;
-        height: fit-content ;
-      }
-
-      .card-name {
-        display:flex;
-        justify-content:center;
-        border-top-left-radius: 0.5rem;
-        border-top-right-radius: 0.5rem;
-        background-color: #272B2F;   
-      }
-
-      .special-card-name {
-        display:flex;
-        justify-content:center;
-        border-top-left-radius: 0.5rem;
-        border-top-right-radius: 0.5rem;
-        background-color: #0D6EFD;  
-      }
-
-      .card-description {
-        display:flex;
-        flex-direction:column;
-        border-top: 1px solid #ccc;
-        align-items:center;
-        height: fit-content
-      }
-
-      .special-card-description {
-        display:flex;
-        flex-direction:column;
-        border-top: 1px solid #0D6EFD;
-        align-items:center;
-        height: fit-content
-      }
-      .card-subtitle {     
-        display:flex;  
-        max-height:5rem;   
-        align-items: center;  
-        gap: 0.5rem
-      }
-      .card-content-list {
-        font-family: 'Open Sans', sans-serif;
-        list-style-type: none;         
-        margin-top: 0rem; 
-        padding-right: 2.5rem
-      }
-
-      ul {
-               
-      }
-
-      li {
-        display:flex;
-        justify-content: center;
-        font-size: 0.9rem;
-        text-align:center
-      }
-
-      button {
-        color: white;
-        background-color: #0D6EFD;
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-        border: none;
-        width: 15rem;
-        padding:0.5rem 0;
-        border-radius: 0.3rem;
-      }
-
-      .special-button {
-        color: #0D6EFD;
-        background-color: #212529;
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-        border: 1px solid #0D6EFD ;
-        width: 15rem;
-        padding:0.5rem 0;
-        border-radius: 0.3rem;
-      }
+      
     </style>
     
-    <section class = "cards"></section>
+    <section class = "panel"></section>
+    <div class="pagination">
+    </div>
     `
     const cards = this.shadow.querySelector(".cards")
 

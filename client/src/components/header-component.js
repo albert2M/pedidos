@@ -3,6 +3,7 @@ class Header extends HTMLElement {
       super()
       this.shadow = this.attachShadow({ mode: 'open' })
       this.justifyContent = this.getAttribute('justify-content')
+      this.backgroundColor = this.getAttribute('background-color')
     }
   
     connectedCallback () {
@@ -18,7 +19,7 @@ class Header extends HTMLElement {
           }
 
           header {
-            background-color: hsl(0, 0%, 0%);
+            background-color: ${this.backgroundColor};
             display: flex;
             justify-content: ${this.justifyContent};
             width: 100%;
