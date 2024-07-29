@@ -1,0 +1,9 @@
+body {
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient( at 135% 60%, hsl(240, 26%, 50%) 10%, hsl(240, 92%, 25%));
+    min-height: 100vh;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
