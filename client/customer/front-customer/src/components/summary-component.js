@@ -1,41 +1,41 @@
 class Summary extends HTMLElement {
-    constructor () {
-      super()
-      this.shadow = this.attachShadow({ mode: 'open' })
-      this.data = []
-    }
-  
-    async connectedCallback () {
-      await this.loadData()
-      await this.render()
-    }
+  constructor() {
+    super()
+    this.shadow = this.attachShadow({ mode: 'open' })
+    this.data = []
+  }
 
-    loadData () {
-      this.data = [
-        {
-          "title": "Cocacola",  
-          "total": "180€",
-          "unities": "16u,",
-          "sizeNumber": 330,
-          "measurementUnit": "ml",
-          "quantity": "2 x",
-          "unityPrice": "90€"
-        },
-        {
-          "title": "cafe",  
-          "total": "250€",
-          "unities": "10u,",
-          "sizeNumber": 500,
-          "measurementUnit": "gr",
-          "quantity": "5 x",
-          "unityPrice": "50€"
-        }
-      ]
-    }
-  
-    render () {
-      this.shadow.innerHTML =
-      /*html*/`
+  async connectedCallback() {
+    await this.loadData()
+    await this.render()
+  }
+
+  loadData() {
+    this.data = [
+      {
+        title: 'Cocacola',
+        total: '180€',
+        unities: '16u,',
+        sizeNumber: 330,
+        measurementUnit: 'ml',
+        quantity: '2 x',
+        unityPrice: '90€'
+      },
+      {
+        title: 'cafe',
+        total: '250€',
+        unities: '10u,',
+        sizeNumber: 500,
+        measurementUnit: 'gr',
+        quantity: '5 x',
+        unityPrice: '50€'
+      }
+    ]
+  }
+
+  render() {
+    this.shadow.innerHTML =
+      /* html */`
         <style>
           *{
             box-sizing: border-box;
@@ -125,69 +125,66 @@ class Summary extends HTMLElement {
     <button class="finish-order">Finalizar pedido</button>
 </div>
         `
-        const products = this.shadow.querySelector(".order-summary")
+    const products = this.shadow.querySelector('.order-summary')
 
-        this.data.forEach(product => {
-          const productContainer = document.createElement('div')
-          productContainer.classList.add('product')
-          products.appendChild(productContainer)
+    this.data.forEach(product => {
+      const productContainer = document.createElement('div')
+      productContainer.classList.add('product')
+      products.appendChild(productContainer)
 
-          const productName = document.createElement('div') /*div con Nombre del producto*/ 
-          productName.classList.add('product-name')
-          productContainer.appendChild(productName)
+      const productName = document.createElement('div') /* div con Nombre del producto */
+      productName.classList.add('product-name')
+      productContainer.appendChild(productName)
 
-          const titleProduct = document.createElement("h3")
-          titleProduct.textContent = product.title
-          productName.appendChild(titleProduct)
+      const titleProduct = document.createElement('h3')
+      titleProduct.textContent = product.title
+      productName.appendChild(titleProduct)
 
-          const totalProductPrice = document.createElement('div')
-          totalProductPrice.classList.add('total-product-price')
-          productContainer.appendChild(totalProductPrice)
+      const totalProductPrice = document.createElement('div')
+      totalProductPrice.classList.add('total-product-price')
+      productContainer.appendChild(totalProductPrice)
 
-          const priceTotalProduct = document.createElement("span")
-          priceTotalProduct.textContent = product.total
-          totalProductPrice.appendChild(priceTotalProduct)
+      const priceTotalProduct = document.createElement('span')
+      priceTotalProduct.textContent = product.total
+      totalProductPrice.appendChild(priceTotalProduct)
 
-          const productSpecs = document.createElement("div")
-          productSpecs.classList.add('product-specs')
-          productContainer.appendChild(productSpecs)
+      const productSpecs = document.createElement('div')
+      productSpecs.classList.add('product-specs')
+      productContainer.appendChild(productSpecs)
 
-          const productUnities = document.createElement('div')
-          productUnities.classList.add('product-unities')
-          productSpecs.appendChild(productUnities)
+      const productUnities = document.createElement('div')
+      productUnities.classList.add('product-unities')
+      productSpecs.appendChild(productUnities)
 
-          const unitiesProduct = document.createElement('span')
-          unitiesProduct.textContent = product.unities
-          productUnities.appendChild(unitiesProduct)
+      const unitiesProduct = document.createElement('span')
+      unitiesProduct.textContent = product.unities
+      productUnities.appendChild(unitiesProduct)
 
-          const productSize = document.createElement("div")
-          productSize.classList.add('product-size')
-          productSpecs.appendChild(productSize)
+      const productSize = document.createElement('div')
+      productSize.classList.add('product-size')
+      productSpecs.appendChild(productSize)
 
-          const sizeProduct = document.createElement('span')
-          sizeProduct.textContent = product.sizeNumber
-          productSize.appendChild(sizeProduct)
+      const sizeProduct = document.createElement('span')
+      sizeProduct.textContent = product.sizeNumber
+      productSize.appendChild(sizeProduct)
 
-          const productMeasurement = document.createElement('span')
-          productMeasurement.textContent = product.measurementUnit
-          productSize.appendChild(productMeasurement)
+      const productMeasurement = document.createElement('span')
+      productMeasurement.textContent = product.measurementUnit
+      productSize.appendChild(productMeasurement)
 
-          const productQuantity = document.createElement("div")
-          productQuantity.classList.add('product-quantity')
-          productContainer.appendChild(productQuantity)
+      const productQuantity = document.createElement('div')
+      productQuantity.classList.add('product-quantity')
+      productContainer.appendChild(productQuantity)
 
-          const quantityProduct = document.createElement('span')
-          quantityProduct.textContent = product.quantity
-          productQuantity.appendChild(quantityProduct)
+      const quantityProduct = document.createElement('span')
+      quantityProduct.textContent = product.quantity
+      productQuantity.appendChild(quantityProduct)
 
-          const productPrice = document.createElement('span')
-          productPrice.textContent = product.unityPrice
-          productQuantity.appendChild(productPrice)
-
-
-
-        }) 
-      }
+      const productPrice = document.createElement('span')
+      productPrice.textContent = product.unityPrice
+      productQuantity.appendChild(productPrice)
+    })
   }
-  
-  customElements.define('summary-component', Summary)
+}
+
+customElements.define('summary-component', Summary)

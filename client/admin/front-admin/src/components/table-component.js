@@ -1,20 +1,22 @@
 class Table extends HTMLElement {
-  constructor () {
+  constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.data = []
+    this.currentPage = 1
+    this.itemsPerPage = 5
   }
 
   // connectedCallback () {
   //   this.render()
   // }
 
-  async connectedCallback () {
+  async connectedCallback() {
     await this.loadData()
     await this.render()
   }
 
-  loadData () {
+  loadData() {
     this.data = [
       {
         Nombre: 'Carlos',
@@ -23,21 +25,48 @@ class Table extends HTMLElement {
         'Fecha de actualización': '2024-04-22'
       },
       {
-        Nombre: 'Carlos',
-        Email: 'carlossedagambin@gmail.com',
+        Nombre: 'Pepe',
+        Email: 'pepe@gmail.com',
         'Fecha de creación': '2024-04-22',
         'Fecha de actualización': '2024-04-22'
       },
       {
-        Nombre: 'Carlos',
-        Email: 'carlossedagambin@gmail.com',
+        Nombre: 'Manolo',
+        Email: 'Manolo@gmail.com',
+        'Fecha de creación': '2024-04-22',
+        'Fecha de actualización': '2024-04-22'
+      },
+      {
+        Nombre: 'Jose',
+        Email: 'jose@gmail.com',
+        'Fecha de creación': '2024-04-22',
+        'Fecha de actualización': '2024-04-22'
+      },
+      {
+        Nombre: 'Miguel',
+        Email: 'Miguel@gmail.com',
+        'Fecha de creación': '2024-04-22',
+        'Fecha de actualización': '2024-04-22'
+      },
+      {
+        Nombre: 'Vicente',
+        Email: 'vicente@gmail.com',
+        'Fecha de creación': '2024-04-22',
+        'Fecha de actualización': '2024-04-22'
+      },
+      {
+        Nombre: 'Juan',
+        Email: 'juan@gmail.com',
         'Fecha de creación': '2024-04-22',
         'Fecha de actualización': '2024-04-22'
       }
     ]
   }
 
-  render () {
+  render() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage
+    const endIndex = startIndex + this.itemsPerPage
+    const pageData = this.data.slice(startIndex, endIndex)
     this.shadow.innerHTML =
       /* html */ `
        
@@ -71,12 +100,34 @@ class Table extends HTMLElement {
 
           .table-header{
             background-color: hsl(0, 0%, 100%);
-            padding: 0.2rem 0.5rem;
+            padding: 0 0.5rem;
+            position: relative;
+            display: inline-block;
           }
 
-          .table-header-buttons ul{
-            display: flex;
-            gap: 0.5rem;
+          .filter-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+          }
+
+          .filter-form {
+            display: none;
+            position: absolute;
+            top: 35px;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            z-index: 1000;
+            width: 300px;
+          }
+
+          .filter-form.active {
+            display: block;
           }
 
           .table-body{
@@ -84,101 +135,267 @@ class Table extends HTMLElement {
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            max-height: 37rem; /* Ajusta la altura máxima para que aparezca el scroll */
+            overflow-y: auto; /* Agrega la barra de desplazamiento vertical */
           }
 
           .table-register{
             width: 80%;
+            background-color:hsl(0, 0%, 0%);
+            
           }
 
           .table-register-buttons{
             background-color: hsl(0, 0%, 100%);
-            padding: 0.2rem 0.5rem;
+            padding: 0rem 0.5rem;
           }
 
           .table-register-buttons ul{
             display: flex;
-            gap: 0.5rem;
             justify-content: flex-end;
           }
 
-          .table-register-data{
-            background-color: hsl(0, 0%, 0%);
-            padding: 0.2rem;
-          }
-
-          .table-register-data ul{
+          .table-register-content{
             display: flex;
             flex-direction: column;
             gap: 0.2rem;
+            padding: 0.5rem;
           }
 
-          .table-register-data ul li{
+          .table-register-content li {
             color: hsl(0, 0%, 100%);
           }
 
           .table-footer{
             display: flex;
             justify-content: space-between;
+            background-color: hsl(0, 0%, 100%);
+            padding: 0.2rem 0.5rem;
           }
 
           .table-info span{
-            color: hsl(0, 0%, 0%);
+            color: hsl(#2323F6);
             font-weight: 700;
+            padding: 0.5rem;
           }
-        </style>
 
-        <section class="table">
-          <div class="table-header">
-            <div class="table-header-buttons">
-                <ul>
-                    <li>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11L16.76 3.62A1 1 0 0 0 16.59 2.22A1 1 0 0 0 16 2H2A1 1 0 0 0 1.38 2.22A1 1 0 0 0 1.21 3.62L7 11V16.87A1 1 0 0 0 7.29 17.7L9.29 19.7A1 1 0 0 0 10.7 19.7A1 1 0 0 0 11 18.87V11M13 16L18 21L23 16Z" /></svg>
-                    </li>
-                </ul>
+          .pagination-button {
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            background-color: hsl(240, 92%, 25%);
+            color: white;
+            margin: 0 0.25rem;
+            border-radius: 0.25rem;
+            border: none;
+          }
+          .pagination-button[disabled] {
+            background-color: grey;
+            cursor: not-allowed;
+          }
+
+          .pagination-input {
+            width: calc(1ch * var(--max-digits, 3));
+            padding: 0.2rem;
+            font-size: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+          }
+          
+
+          .pagination-input[data-max-digits='1'] {
+            width: calc(1ch * 1);
+          }
+
+          .pagination-input[data-max-digits='2'] {
+            width: calc(1ch * 2);
+          }
+
+          .pagination-input[data-max-digits='3'] {
+            width: calc(1ch * 3);
+          }
+
+          .pagination-input[data-max-digits='4'] {
+            width: calc(1ch * 4);
+          }
+
+          .pagination-input:focus {
+            border-color: #007bff; /* Cambia el color del borde al hacer focus */
+          }
+    </style>
+
+    <section class="table">
+      <div class="table-header">
+        <div class="filter-button">          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11L16.76 3.62A1 1 0 0 0 16.59 2.22A1 1 0 0 0 16 2H2A1 1 0 0 0 1.38 2.22A1 1 0 0 0 1.21 3.62L7 11V16.87A1 1 0 0 0 7.29 17.7L9.29 19.7A1 1 0 0 0 10.7 19.7A1 1 0 0 0 11 18.87V11M13 16L18 21L23 16Z" /></svg>                      
+        </div>
+        <form class="filter-form">
+            <div class="form-group">
+              <label for="filter-name">Nombre:</label>
+              <input type="text" id="filter-name" name="filter-name">
             </div>
-          </div>
-
-
-
-          <div class="table-body">
-            <div class="table-register">
-                <div class="table-register-buttons">
-                    <ul>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>
-                        </li>
-                        <li>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>
-                        </li>
-                    </ul>
-                </div>
-                <div class="table-register-data">
-                    <ul>
-                        <li>Nombre: Carlos</li>
-                        <li>Email: carlossedagambin@gmail.com</li>
-                        <li>Fecha de creación: 2024-04-22</li>
-                        <li>Fecha de actualización: 2024-04-22</li>
-                    </ul>
-                </div>
+            <div class="form-group">
+              <label for="filter-email">Email:</label>
+              <input type="email" id="filter-email" name="filter-email">
             </div>
-          </div>
-
-
-
-          <div class="table-footer">
-            <div class="table-info">
-                <span>1 registro en total, mostrando 10 por página</span>
+            <div class="form-group">
+              <label for="filter-creation-date">Fecha de creación:</label>
+              <input type="date" id="filter-creation-date" name="filter-creation-date">
             </div>
-            <div class="table-pagination"></div>
-          </div>
-        </section
-        `
+            <div class="form-group">
+              <label for="filter-update-date">Fecha de actualización:</label>
+              <input type="date" id="filter-update-date" name="filter-update-date">
+            </div>
+            <div class="form-actions">
+              <button type="button" id="apply-filter">Aplicar</button>
+              <button type="reset">Limpiar</button>
+            </div>
+          </form>
+      </div>
+
+      <div class="table-body"></div>
+
+      <div class="table-footer">
+        <div class="table-info">
+            <span>${this.data.length} registro(s) en total, mostrando ${this.itemsPerPage} por página</span>
+        </div>
+        <div class="table-pagination"></div>
+      </div>
+    </section>
+    `
     const tables = this.shadow.querySelector('.table-body')
-    this.data.forEach(element => {
-      const tableContainer = document.createElement('div')
-      tableContainer.classList.add('product')
-      tables.appendChild(tableContainer)
+    tables.innerHTML = '' // Limpiar contenido anterior
+    pageData.forEach(element => {
+      const tableRegister = document.createElement('div')
+      tableRegister.classList.add('table-register')
+      tables.appendChild(tableRegister)
+
+      const tableRegisterButtons = document.createElement('div')
+      tableRegisterButtons.classList.add('table-register-buttons')
+      tableRegister.appendChild(tableRegisterButtons)
+
+      const registerButtons = document.createElement('ul')
+      registerButtons.classList.add('register-buttons')
+      tableRegisterButtons.appendChild(registerButtons)
+
+      const editButton = document.createElement('li')
+      const editIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>'
+      editButton.innerHTML = editIcon
+      registerButtons.appendChild(editButton)
+
+      const deleteButton = document.createElement('li')
+      const deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>'
+
+      deleteButton.innerHTML = deleteIcon
+      registerButtons.appendChild(deleteButton)
+
+      const tableRegisterContent = document.createElement('ul')
+      tableRegisterContent.classList.add('table-register-content')
+      tableRegister.appendChild(tableRegisterContent)
+
+      Object.entries(element).forEach(([key, value]) => {
+        const elementItemList = document.createElement('li')
+        elementItemList.textContent = `${key}: ${value}`
+        tableRegisterContent.appendChild(elementItemList)
+      })
     })
+
+    // const tableHeader = this.shadow.querySelector('.table-header')
+    // // tableHeader.innerHTML = ''
+    // const filterButton = document.querySelector('.filter-button')
+    // const filterForm = document.querySelector('.filter-form')
+
+    // filterButton.addEventListener('click', () => {
+    //   filterForm.classList.toggle('active')
+    // })
+
+    // document.addEventListener('click', (event) => {
+    //   if (!filterButton.contains(event.target) && !filterForm.contains(event.target)) {
+    //     filterForm.classList.remove('active')
+    //   }
+    // })
+    this.addFilterToggle()
+    this.renderPagination() // Llamada para renderizar la paginación
+  }
+
+  addFilterToggle() {
+    const filterButton = this.shadow.querySelector('.filter-button')
+    const filterForm = this.shadow.querySelector('.filter-form')
+
+    filterButton.addEventListener('click', () => {
+      filterForm.classList.toggle('active')
+    })
+
+    document.addEventListener('click', (event) => {
+      if (!filterButton.contains(event.target) && !filterForm.contains(event.target)) {
+        filterForm.classList.remove('active')
+      }
+    })
+  }
+
+  renderPagination() {
+    const paginationContainer = this.shadow.querySelector('.table-pagination')
+    paginationContainer.innerHTML = ''
+
+    const totalPages = Math.ceil(this.data.length / this.itemsPerPage)
+
+    const prevButton = document.createElement('button')
+    prevButton.textContent = 'Anterior'
+    prevButton.classList.add('pagination-button')
+    prevButton.disabled = this.currentPage === 1
+    prevButton.addEventListener('click', () => this.changePage(this.currentPage - 1))
+    paginationContainer.appendChild(prevButton)
+
+    const pageInput = document.createElement('input')
+    pageInput.type = 'text' // Tipo inicial como texto para mostrar el número actual
+    pageInput.value = this.currentPage
+    pageInput.classList.add('pagination-input')
+    pageInput.style.textAlign = 'center' // Para centrar el texto dentro del input
+
+    pageInput.addEventListener('click', () => {
+      pageInput.type = 'number' // Cambiar a tipo número al hacer click para ingresar un número
+      pageInput.select() // Seleccionar el contenido actual para facilitar la entrada
+    })
+
+    // Manejar el cambio de página cuando el input pierde el foco o se presiona Enter
+    pageInput.addEventListener('blur', () => this.handlePageInput(pageInput, totalPages))
+    pageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.handlePageInput(pageInput, totalPages)
+      }
+    })
+
+    paginationContainer.appendChild(pageInput)
+
+    const nextButton = document.createElement('button')
+    nextButton.textContent = 'Siguiente'
+    nextButton.classList.add('pagination-button')
+    nextButton.disabled = this.currentPage === totalPages
+    nextButton.addEventListener('click', () => this.changePage(this.currentPage + 1))
+    paginationContainer.appendChild(nextButton)
+  }
+
+  handlePageInput(inputElement, totalPages) {
+    const pageNumber = parseInt(inputElement.value, 10)
+
+    if (isNaN(pageNumber) || pageNumber < 1) {
+      alert('Por favor ingresa un número válido.')
+      inputElement.value = this.currentPage // Restaurar el número actual si la entrada es inválida
+    } else if (pageNumber > totalPages) {
+      this.changePage(totalPages) // Ir a la última página si el número ingresado es mayor al total de páginas
+    } else {
+      this.changePage(pageNumber) // Cambiar a la página deseada
+    }
+
+    inputElement.type = 'text' // Volver a mostrar como texto el número de la página
+    inputElement.value = this.currentPage // Actualizar el valor mostrado en el input
+  }
+
+  changePage(pageNumber) {
+    this.currentPage = pageNumber
+    this.render()
   }
 }
 

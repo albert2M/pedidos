@@ -1,16 +1,16 @@
 class Login extends HTMLElement {
-    constructor () {
-      super()
-      this.shadow = this.attachShadow({ mode: 'open' })
-    }
-  
-    connectedCallback () {
-      this.render()
-    }
-  
-    render () {
-      this.shadow.innerHTML =
-      /*html*/ `
+  constructor() {
+    super()
+    this.shadow = this.attachShadow({ mode: 'open' })
+  }
+
+  connectedCallback() {
+    this.render()
+  }
+
+  render() {
+    this.shadow.innerHTML =
+      /* html */ `
        
         <style>
 
@@ -84,7 +84,7 @@ class Login extends HTMLElement {
             </div>
         </form>
         `
-      }
   }
-  
-  customElements.define('login-component', Login)
+}
+
+customElements.define('login-component', Login)
