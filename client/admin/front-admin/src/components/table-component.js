@@ -1,5 +1,5 @@
 class Table extends HTMLElement {
-  constructor() {
+  constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.data = []
@@ -11,12 +11,12 @@ class Table extends HTMLElement {
   //   this.render()
   // }
 
-  async connectedCallback() {
+  async connectedCallback () {
     await this.loadData()
     await this.render()
   }
 
-  loadData() {
+  loadData () {
     this.data = [
       {
         Nombre: 'Carlos',
@@ -63,7 +63,7 @@ class Table extends HTMLElement {
     ]
   }
 
-  render() {
+  render () {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage
     const endIndex = startIndex + this.itemsPerPage
     const pageData = this.data.slice(startIndex, endIndex)
@@ -320,22 +320,16 @@ class Table extends HTMLElement {
     this.renderPagination() // Llamada para renderizar la paginación
   }
 
-  addFilterToggle() {
+  addFilterToggle () {
     const filterButton = this.shadow.querySelector('.filter-button')
     const filterForm = this.shadow.querySelector('.filter-form')
 
     filterButton.addEventListener('click', () => {
       filterForm.classList.toggle('active')
     })
-
-    document.addEventListener('click', (event) => {
-      if (!filterButton.contains(event.target) && !filterForm.contains(event.target)) {
-        filterForm.classList.remove('active')
-      }
-    })
   }
 
-  renderPagination() {
+  renderPagination () {
     const paginationContainer = this.shadow.querySelector('.table-pagination')
     paginationContainer.innerHTML = ''
 
@@ -377,7 +371,7 @@ class Table extends HTMLElement {
     paginationContainer.appendChild(nextButton)
   }
 
-  handlePageInput(inputElement, totalPages) {
+  handlePageInput (inputElement, totalPages) {
     const pageNumber = parseInt(inputElement.value, 10)
 
     if (isNaN(pageNumber) || pageNumber < 1) {
@@ -393,7 +387,7 @@ class Table extends HTMLElement {
     inputElement.value = this.currentPage // Actualizar el valor mostrado en el input
   }
 
-  changePage(pageNumber) {
+  changePage (pageNumber) {
     this.currentPage = pageNumber
     this.render()
   }
