@@ -1,5 +1,5 @@
 class Table extends HTMLElement {
-  constructor() {
+  constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.data = []
@@ -7,66 +7,20 @@ class Table extends HTMLElement {
     this.itemsPerPage = 5
   }
 
-  // connectedCallback () {
-  //   this.render()
-  // }
-
-  async connectedCallback() {
+  async connectedCallback () {
     await this.loadData()
     await this.render()
   }
 
-  loadData() {
-    this.data = [
-      {
-        Nombre: 'Carlos',
-        Email: 'carlossedagambin@gmail.com',
-        'Fecha de creación': '2024-04-22',
-        'Fecha de actualización': '2024-04-22'
-      },
-      {
-        Nombre: 'Pepe',
-        Email: 'pepe@gmail.com',
-        'Fecha de creación': '2024-04-22',
-        'Fecha de actualización': '2024-04-22'
-      },
-      {
-        Nombre: 'Manolo',
-        Email: 'Manolo@gmail.com',
-        'Fecha de creación': '2024-04-22',
-        'Fecha de actualización': '2024-04-22'
-      },
-      {
-        Nombre: 'Jose',
-        Email: 'jose@gmail.com',
-        'Fecha de creación': '2024-04-22',
-        'Fecha de actualización': '2024-04-22'
-      },
-      {
-        Nombre: 'Miguel',
-        Email: 'Miguel@gmail.com',
-        'Fecha de creación': '2024-04-22',
-        'Fecha de actualización': '2024-04-22'
-      },
-      {
-        Nombre: 'Vicente',
-        Email: 'vicente@gmail.com',
-        'Fecha de creación': '2024-04-22',
-        'Fecha de actualización': '2024-04-22'
-      },
-      {
-        Nombre: 'Juan',
-        Email: 'juan@gmail.com',
-        'Fecha de creación': '2024-04-22',
-        'Fecha de actualización': '2024-04-22'
-      }
-    ]
+  async loadData () {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users`)
+    this.data = await response.json()
   }
 
-  render() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage
-    const endIndex = startIndex + this.itemsPerPage
-    const pageData = this.data.slice(startIndex, endIndex)
+  render () {
+    // const startIndex = (this.currentPage - 1) * this.itemsPerPage
+    // const endIndex = startIndex + this.itemsPerPage
+    // const pageData = this.data.slice(startIndex, endIndex)
     this.shadow.innerHTML =
       /* html */ `
        
@@ -116,7 +70,7 @@ class Table extends HTMLElement {
             display: none;
             position: absolute;
             top: 35px;
-            right: 0;
+            right: 1;
             background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -267,7 +221,8 @@ class Table extends HTMLElement {
     `
     const tables = this.shadow.querySelector('.table-body')
     tables.innerHTML = '' // Limpiar contenido anterior
-    pageData.forEach(element => {
+
+    this.data.rows.forEach(element => {
       const tableRegister = document.createElement('div')
       tableRegister.classList.add('table-register')
       tables.appendChild(tableRegister)
@@ -302,25 +257,11 @@ class Table extends HTMLElement {
       })
     })
 
-    // const tableHeader = this.shadow.querySelector('.table-header')
-    // // tableHeader.innerHTML = ''
-    // const filterButton = document.querySelector('.filter-button')
-    // const filterForm = document.querySelector('.filter-form')
-
-    // filterButton.addEventListener('click', () => {
-    //   filterForm.classList.toggle('active')
-    // })
-
-    // document.addEventListener('click', (event) => {
-    //   if (!filterButton.contains(event.target) && !filterForm.contains(event.target)) {
-    //     filterForm.classList.remove('active')
-    //   }
-    // })
     this.addFilterToggle()
     this.renderPagination() // Llamada para renderizar la paginación
   }
 
-  addFilterToggle() {
+  addFilterToggle () {
     const filterButton = this.shadow.querySelector('.filter-button')
     const filterForm = this.shadow.querySelector('.filter-form')
     const tableSection = this.shadow.querySelector('.table')
@@ -332,13 +273,13 @@ class Table extends HTMLElement {
     })
 
     tableSection.addEventListener('click', (e) => {
-      if (!e.target.matches('svg')) {
+      if (!e.target.matches('svg') && !filterForm.contains(e.target)) {
         filterForm.classList.remove('active')
       }
     })
   }
 
-  renderPagination() {
+  renderPagination () {
     const paginationContainer = this.shadow.querySelector('.table-pagination')
     paginationContainer.innerHTML = ''
 
@@ -380,7 +321,7 @@ class Table extends HTMLElement {
     paginationContainer.appendChild(nextButton)
   }
 
-  handlePageInput(inputElement, totalPages) {
+  handlePageInput (inputElement, totalPages) {
     const pageNumber = parseInt(inputElement.value, 10)
 
     if (isNaN(pageNumber) || pageNumber < 1) {
@@ -396,7 +337,7 @@ class Table extends HTMLElement {
     inputElement.value = this.currentPage // Actualizar el valor mostrado en el input
   }
 
-  changePage(pageNumber) {
+  changePage (pageNumber) {
     this.currentPage = pageNumber
     this.render()
   }

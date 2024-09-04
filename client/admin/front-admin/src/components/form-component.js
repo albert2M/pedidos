@@ -52,8 +52,11 @@ class Form extends HTMLElement {
           }
 
           .form-header-tabs ul li{
+            height: 2.1rem;
+            padding: 0.5rem 1rem;
             background-color: hsl(258, 58%, 42%);
             font-weight: 700;
+            color: hsl(0, 0%, 100%)
           }
 
           .form-header-buttons{
@@ -106,7 +109,7 @@ class Form extends HTMLElement {
                 <li>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.36,2.72L20.78,4.14L15.06,9.85C16.13,11.39 16.28,13.24 15.38,14.44L9.06,8.12C10.26,7.22 12.11,7.37 13.65,8.44L19.36,2.72M5.93,17.57C3.92,15.56 2.69,13.16 2.35,10.92L7.23,8.83L14.67,16.27L12.58,21.15C10.34,20.81 7.94,19.58 5.93,17.57Z" /></svg>
                 </li>
-                <li>
+                <li class="store-button">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" /></svg>
                 </li>
               </ul>
@@ -134,6 +137,39 @@ class Form extends HTMLElement {
           </div>
         </section>
         `
+    this.renderStoreButton()
+  }
+
+  renderStoreButton () {
+    this.shadow.querySelector('.store-button').addEventListener('click', async (event) => {
+      event.preventDefault()
+      const form = this.shadow.querySelector('form')
+      const formData = new FormData(form)
+
+      // for (const pair of formData.entries()) {
+      //   console.log(pair[0] + ', ' + pair[1]) Todo esto es para ver por el inspector que es lo que se está capturando
+      // }
+
+      const formDataJson = {}
+
+      for (const [key, value] of formData.entries()) {
+        formDataJson[key] = value !== '' ? value : null
+      }
+
+      const endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formDataJson)
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    })
   }
 }
 
