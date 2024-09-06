@@ -1,10 +1,13 @@
+import isEqual from 'lodash-es/isEqual'
+import { store } from '../redux/store.js'
+import { showFormElement } from '../redux/crud-slice.js'
+
 class Table extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.data = []
     this.currentPage = 1
-    this.itemsPerPage = 5
   }
 
   async connectedCallback () {
@@ -77,7 +80,7 @@ class Table extends HTMLElement {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 1rem;
             z-index: 1000;
-            width: 300px;
+            width: 20rem;
           }
 
           .filter-form.active {
@@ -89,7 +92,8 @@ class Table extends HTMLElement {
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            max-height: 37rem; /* Ajusta la altura máxima para que aparezca el scroll */
+            height: 70vh;
+            max-height: 70vh; /* Ajusta la altura máxima para que aparezca el scroll */
             overflow-y: auto; /* Agrega la barra de desplazamiento vertical */
           }
 
@@ -156,9 +160,9 @@ class Table extends HTMLElement {
             text-align: center;
             outline: none;
             transition: border-color 0.2s;
+            width: 5rem;
           }
           
-
           .pagination-input[data-max-digits='1'] {
             width: calc(1ch * 1);
           }
@@ -213,12 +217,13 @@ class Table extends HTMLElement {
 
       <div class="table-footer">
         <div class="table-info">
-            <span>${this.data.length} registro(s) en total, mostrando ${this.itemsPerPage} por página</span>
+            <span>${this.data.count} ${this.data.count > 1 ? 'registros' : 'registro'} en total, mostrando ${this.data.meta.size} por página</span>
         </div>
         <div class="table-pagination"></div>
       </div>
     </section>
     `
+
     const tables = this.shadow.querySelector('.table-body')
     tables.innerHTML = '' // Limpiar contenido anterior
 
@@ -236,29 +241,63 @@ class Table extends HTMLElement {
       tableRegisterButtons.appendChild(registerButtons)
 
       const editButton = document.createElement('li')
-      const editIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>'
-      editButton.innerHTML = editIcon
+      editButton.classList.add('edit-button')
+      editButton.dataset.id = element.id
+      editButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>'
       registerButtons.appendChild(editButton)
 
       const deleteButton = document.createElement('li')
-      const deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>'
-
-      deleteButton.innerHTML = deleteIcon
+      deleteButton.classList.add('delete-button')
+      deleteButton.dataset.id = element.id
+      deleteButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" /></svg>'
       registerButtons.appendChild(deleteButton)
 
       const tableRegisterContent = document.createElement('ul')
       tableRegisterContent.classList.add('table-register-content')
       tableRegister.appendChild(tableRegisterContent)
 
-      Object.entries(element).forEach(([key, value]) => {
-        const elementItemList = document.createElement('li')
-        elementItemList.textContent = `${key}: ${value}`
-        tableRegisterContent.appendChild(elementItemList)
-      })
+      // Object.entries(element).forEach(([key, value]) => {
+      //   const elementItemList = document.createElement('li')
+      //   elementItemList.textContent = `${key}: ${value}`
+      //   tableRegisterContent.appendChild(elementItemList)
+      // })
+
+      let elementItemList = document.createElement('li')
+      elementItemList.textContent = `nombre: ${element.name}`
+      tableRegisterContent.appendChild(elementItemList)
+
+      elementItemList = document.createElement('li')
+      elementItemList.textContent = `email: ${element.email}`
+      tableRegisterContent.appendChild(elementItemList)
+
+      elementItemList = document.createElement('li')
+      elementItemList.textContent = `creado el: ${element.createdAt}`
+      tableRegisterContent.appendChild(elementItemList)
     })
 
+    this.renderRegisterButtons()
     this.addFilterToggle()
     this.renderPagination() // Llamada para renderizar la paginación
+  }
+
+  async renderRegisterButtons () {
+    this.shadow.querySelector('.table-body').addEventListener('click', async (event) => {
+      if (event.target.closest('.edit-button')) {
+        const id = event.target.closest('.edit-button').dataset.id
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`)
+        const data = await response.json()
+
+        const formElement = {
+          data
+        }
+
+        store.dispatch(showFormElement(formElement))
+      }
+
+      if (event.target.closest('.delete-button')) {
+
+      }
+    })
   }
 
   addFilterToggle () {
@@ -294,7 +333,7 @@ class Table extends HTMLElement {
 
     const pageInput = document.createElement('input')
     pageInput.type = 'text' // Tipo inicial como texto para mostrar el número actual
-    pageInput.value = this.currentPage
+    pageInput.value = this.data.meta.currentPage
     pageInput.classList.add('pagination-input')
     pageInput.style.textAlign = 'center' // Para centrar el texto dentro del input
 
@@ -325,7 +364,6 @@ class Table extends HTMLElement {
     const pageNumber = parseInt(inputElement.value, 10)
 
     if (isNaN(pageNumber) || pageNumber < 1) {
-      alert('Por favor ingresa un número válido.')
       inputElement.value = this.currentPage // Restaurar el número actual si la entrada es inválida
     } else if (pageNumber > totalPages) {
       this.changePage(totalPages) // Ir a la última página si el número ingresado es mayor al total de páginas
