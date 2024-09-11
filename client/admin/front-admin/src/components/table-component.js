@@ -7,16 +7,27 @@ class Table extends HTMLElement {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.data = []
+    this.unsubscribe = null
+    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
     this.currentPage = 1
   }
 
   async connectedCallback () {
+    this.unsubscribe = store.subscribe(async () => {
+      const currentState = store.getState()
+
+      if (currentState.crud.tableEndpoint && isEqual(this.endpoint, currentState.crud.tableEndpoint)) {
+        await this.loadData()
+        await this.render()
+      }
+    })
+
     await this.loadData()
     await this.render()
   }
 
   async loadData () {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users`)
+    const response = await fetch(this.endpoint)
     this.data = await response.json()
   }
 

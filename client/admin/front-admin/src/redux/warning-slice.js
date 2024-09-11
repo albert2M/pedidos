@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-export const crudSlice = createSlice({
-  name: 'crud',
+export const warningSlice = createSlice({
+  name: 'warning',
   initialState: {
     formElement: {
       data: null
@@ -21,6 +21,6 @@ export const crudSlice = createSlice({
 export const {
   showFormElement,
   refreshTable
-} = crudSlice.actions
+} = warningSlice.actions
 
-export default crudSlice.reducer
+export default warningSlice.reducer
