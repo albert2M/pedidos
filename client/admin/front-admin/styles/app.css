@@ -1,31 +1,16 @@
+
+*{
+    box-sizing: border-box;
+}
+
 body {
     display: flex;
     flex-direction: column;
     background: radial-gradient( at 135% 60%, hsl(240, 26%, 50%) 10%, hsl(240, 92%, 25%));
     min-height: 100vh;
     height: 100vh;
+    max-height: 100vh;
     margin: 0;
+    overflow: hidden;
     padding: 0;
-}
-
-main{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 2rem;
-}
-
-main.center{
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-}
-
-main.panel{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    height: 100%;  
 }

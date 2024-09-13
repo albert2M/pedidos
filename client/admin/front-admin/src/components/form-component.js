@@ -193,6 +193,12 @@ class Form extends HTMLElement {
           body: JSON.stringify(formDataJson)
         })
 
+        document.dispatchEvent(new CustomEvent('message', {
+          detail: {
+            message: 'Datos guardados correctamente'
+          }
+        }))
+
         store.dispatch(refreshTable(this.endpoint))
         this.shadow.querySelector("[name='id']").value = ''
         form.reset()

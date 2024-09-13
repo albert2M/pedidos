@@ -306,7 +306,15 @@ class Table extends HTMLElement {
       }
 
       if (event.target.closest('.delete-button')) {
+        const deleteButton = event.target.closest('.delete-button')
+        const element = `${this.endpoint}/${deleteButton.dataset.id}`
 
+        document.dispatchEvent(new CustomEvent('showDeleteModal', {
+          detail: {
+            endpoint: this.endpoint,
+            element
+          }
+        }))
       }
     })
   }

@@ -23,7 +23,7 @@ class Main extends HTMLElement {
             display: flex;
             flex-direction: column;
             height: 100%;
-            padding: 2rem;
+            padding: 0 2rem;
           }
 
           main.center{
