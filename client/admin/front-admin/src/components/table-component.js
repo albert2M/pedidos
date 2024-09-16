@@ -200,7 +200,7 @@ class Table extends HTMLElement {
         <div class="filter-button">          
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11L16.76 3.62A1 1 0 0 0 16.59 2.22A1 1 0 0 0 16 2H2A1 1 0 0 0 1.38 2.22A1 1 0 0 0 1.21 3.62L7 11V16.87A1 1 0 0 0 7.29 17.7L9.29 19.7A1 1 0 0 0 10.7 19.7A1 1 0 0 0 11 18.87V11M13 16L18 21L23 16Z" /></svg>                      
         </div>
-        <form class="filter-form">
+        <!-- <form class="filter-form">
             <div class="form-group">
               <label for="filter-name">Nombre:</label>
               <input type="text" id="filter-name" name="filter-name">
@@ -221,7 +221,7 @@ class Table extends HTMLElement {
               <button type="button" id="apply-filter">Aplicar</button>
               <button type="reset">Limpiar</button>
             </div>
-          </form>
+          </form> -->
       </div>
 
       <div class="table-body"></div>
@@ -287,7 +287,7 @@ class Table extends HTMLElement {
     })
 
     this.renderRegisterButtons()
-    this.addFilterToggle()
+    this.renderFilterButton()
     this.renderPagination() // Llamada para renderizar la paginación
   }
 
@@ -319,21 +319,11 @@ class Table extends HTMLElement {
     })
   }
 
-  addFilterToggle () {
+  renderFilterButton () {
     const filterButton = this.shadow.querySelector('.filter-button')
-    const filterForm = this.shadow.querySelector('.filter-form')
-    const tableSection = this.shadow.querySelector('.table')
 
     filterButton.addEventListener('click', (e) => {
-      if (e.target.matches('svg')) {
-        filterForm.classList.toggle('active')
-      }
-    })
-
-    tableSection.addEventListener('click', (e) => {
-      if (!e.target.matches('svg') && !filterForm.contains(e.target)) {
-        filterForm.classList.remove('active')
-      }
+      document.dispatchEvent(new CustomEvent('showFilterModal'))
     })
   }
 

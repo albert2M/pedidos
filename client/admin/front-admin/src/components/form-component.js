@@ -253,6 +253,11 @@ class Form extends HTMLElement {
         if (error.status === 422) {
           this.shadow.querySelector('.validation-errors').classList.add('active')
           const errorList = this.shadow.querySelector('.validation-errors ul')
+          errorList.innerHTML = ''
+
+          this.shadow.querySelectorAll('input.error').forEach(input => {
+            input.classList.remove('error')
+          })
 
           data.message.forEach(errorMessage => {
             this.shadow.querySelector(`[name='${errorMessage.path}']`).classList.add('error')
@@ -266,11 +271,20 @@ class Form extends HTMLElement {
   }
 
   resetForm = () => {
+    this.shadow.querySelector('.validation-errors').classList.remove('active')
+    const errorList = this.shadow.querySelector('.validation-errors ul')
+    errorList.innerHTML = ''
+
+    this.shadow.querySelectorAll('input.error').forEach(input => {
+      input.classList.remove('error')
+    })
+
     this.shadow.querySelector('form').reset()
     this.shadow.querySelector("[name='id']").value = ''
   }
 
   showElement = async element => {
+    this.resetForm()
     Object.entries(element).forEach(([key, value]) => {
       if (this.shadow.querySelector(`[name="${key}"]`)) {
         this.shadow.querySelector(`[name="${key}"]`).value = value

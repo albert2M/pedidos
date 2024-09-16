@@ -1,62 +1,78 @@
-module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const CustomerCredentials = sequelize.define('CustomerCredentials',
-      {
-        id: {
-          type: DataTypes.INTEGER,
-          autoIncrement: true,
-          primaryKey: true,
-          allowNull: false
-        },
-        customerId: {
-          type: DataTypes.INTEGER,
-          allowNull: false
-        },
-        email: {
-          type: DataTypes.STRING,
-          allowNull: false
-        },
-        password: {
-          type: DataTypes.STRING,
-          allowNull: false
-        },
-        lastPasswodChange: {
-          type: DataTypes.DATE,
-          allowNull: false
-        },
-        createdAt: {
-          type: DataTypes.DATE
-        },
-        updatedAt: {
-          type: DataTypes.DATE
-        }
-      }, {
-        sequelize,
-        tableName: 'customers_credentials',
-        timestamps: true,
-        paranoid: true,
-        indexes: [
-          {
-            name: 'PRIMARY',
-            unique: true,
-            using: 'BTREE',
-            fields: [
-              { name: 'id' }
-            ]
+module.exports = function (sequelize, DataTypes) { // module.exports exporta; y se importa con "require"
+  const CustomerCredentials = sequelize.define('CustomerCredentials',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+      },
+      customerId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre".'
           },
-          {
-            name: 'customers_credentials_customerId_fk',
-            using: 'BTREE',
-            fields: [
-              { name: 'customerId' }
-            ]
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre".'
           }
-        ]
+        }
+      },
+      lastPasswodChange: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          }
+        }
+      },
+      createdAt: {
+        type: DataTypes.DATE
+      },
+      updatedAt: {
+        type: DataTypes.DATE
       }
-    )
-  
-    CustomerCredentials.associate = function (models) { 
-      CustomerCredentials.belongsTo(models.Customer, { as: 'customer', foreignKey: 'customerId' })
+    }, {
+      sequelize,
+      tableName: 'customers_credentials',
+      timestamps: true,
+      paranoid: true,
+      indexes: [
+        {
+          name: 'PRIMARY',
+          unique: true,
+          using: 'BTREE',
+          fields: [
+            { name: 'id' }
+          ]
+        },
+        {
+          name: 'customers_credentials_customerId_fk',
+          using: 'BTREE',
+          fields: [
+            { name: 'customerId' }
+          ]
+        }
+      ]
     }
-  
-    return CustomerCredentials
+  )
+
+  CustomerCredentials.associate = function (models) {
+    CustomerCredentials.belongsTo(models.Customer, { as: 'customer', foreignKey: 'customerId' })
   }
+
+  return CustomerCredentials
+}

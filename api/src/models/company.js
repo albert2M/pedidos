@@ -1,59 +1,99 @@
-module.exports = function (sequelize, DataTypes) {   //module.exports exporta; y se importa con "require"
-    const Company = sequelize.define('Company',
-      {
-        id: {
-          type: DataTypes.INTEGER,
-          autoIncrement: true,
-          primaryKey: true,
-          allowNull: false
-        },
-        commercialName: {
-          type: DataTypes.STRING,
-          allowNull: false
-        },
-        fiscallName: {
-          type: DataTypes.STRING,
-          allowNull: false
-        },
-        commercialAddress: {
-          type:  DataTypes.STRING,
-          allowNull: false
-        },
-        fiscalAddress: {
-          type:  DataTypes.STRING,
-          allowNull: false
-        },
-        vatNumber: {
-          type:  DataTypes.STRING,
-          allowNull: false
-        },
-        createdAt: {
-          type: DataTypes.DATE
-        },
-        updatedAt: {
-          type: DataTypes.DATE
-        }
-      }, {
-        sequelize,
-        tableName: 'companies',
-        timestamps: true,
-        paranoid: true,
-        indexes: [
-          {
-            name: 'PRIMARY',
-            unique: true,
-            using: 'BTREE',
-            fields: [
-              { name: 'id' }
-            ]
+module.exports = function (sequelize, DataTypes) { // module.exports exporta; y se importa con "require"
+  const Company = sequelize.define('Company',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+      },
+      commercialName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre".'
           }
-        ]
+        }
+      },
+      fiscallName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          }
+        }
+      },
+      commercialAddress: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          }
+        }
+      },
+      fiscalAddress: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          }
+        }
+      },
+      vatNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          }
+        }
+      },
+      createdAt: {
+        type: DataTypes.DATE
+      },
+      updatedAt: {
+        type: DataTypes.DATE
       }
-    )
-  
-    Company.associate = function (models) {
-     
+    }, {
+      sequelize,
+      tableName: 'companies',
+      timestamps: true,
+      paranoid: true,
+      indexes: [
+        {
+          name: 'PRIMARY',
+          unique: true,
+          using: 'BTREE',
+          fields: [
+            { name: 'id' }
+          ]
+        }
+      ]
     }
-  
-    return Company
+  )
+
+  Company.associate = function (models) {
+
   }
+
+  return Company
+}
