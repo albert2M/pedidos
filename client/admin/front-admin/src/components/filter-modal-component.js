@@ -1,19 +1,22 @@
+import { store } from '../redux/store.js'
+import { refreshTable } from '../redux/crud-slice.js'
+
 class FilterModal extends HTMLElement {
-  constructor () {
+  constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
   }
 
-  connectedCallback () {
+  connectedCallback() {
     document.addEventListener('showFilterModal', this.handleShowFilterModal.bind(this))
     this.render()
   }
 
-  handleShowFilterModal (event) {
+  handleShowFilterModal(event) {
     this.shadow.querySelector('.filter-modal').classList.add('active')
   }
 
-  render () {
+  render() {
     this.shadow.innerHTML =
       /* html */ `
         <style>
@@ -33,7 +36,7 @@ class FilterModal extends HTMLElement {
             width: 100%;
             z-index: 5000;
             transition: opacity 0.3s;
-            opacity: 0;
+            opacity: 0.5;
             visibility: hidden;
           }
 
@@ -43,22 +46,73 @@ class FilterModal extends HTMLElement {
           }
 
 
-          button {
+          /*button {
             background: none;
             border: none;
             cursor: pointer;
             padding: 0;
-          }
+          }*/
 
           .filter-form {
-            background-color: #fff;
-            border: 1px solid #ccc;
+            background-color: hsla(0, 0%, 100%, 50%);
+            border: none;
             border-radius: 5px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 1rem;
             z-index: 1000;
             width: 20rem;
-          }     
+            box-shadow: 3px 3px 2px 1px rgba(0, 0, 0, 0.1), -3px 3px 2px 1px rgba(0, 0, 0, 0.1)
+
+          } 
+          
+          .form-group {
+            padding-left: 0.5rem;
+            margin-bottom: 1rem
+          }
+          #filter-name {
+            background-color: hsla(0, 0%, 100%, 50%);
+            border: none;
+            width: 75%
+          }
+          #filter-email {
+            background-color: hsla(0, 0%, 100%, 50%);
+            border: none;
+            width: 80%
+          }
+
+          .form-actions{
+            padding: 0 0.5rem;
+            display:flex;
+            justify-content: space-between
+          }
+
+          .form-actions button {
+            background-color: #222260; 
+            color: white;        
+            border: none; 
+            border-radius: 2px; 
+            cursor: pointer; 
+            font-size: 15px; 
+            transition: background-color 0.3s ease
+          }
+
+          .form-actions button:hover {
+            background-color: #5D5DAE; 
+          }
+
+          .apply-filter {
+            border: none;
+            min-width: 5rem;
+           
+          }
+
+          
+
+          .reset-filter {
+            border: none;
+            width: 5rem;
+          }
+
         </style>
 
         <div class="filter-modal">
@@ -73,7 +127,7 @@ class FilterModal extends HTMLElement {
             </div>
             <div class="form-actions">
               <button type="button" class="apply-filter">Aplicar</button>
-              <button type="reset">Cancelar</button>
+              <button type="reset" class="reset-filter">Cancelar</button>
             </div>
           </form>
         </div>

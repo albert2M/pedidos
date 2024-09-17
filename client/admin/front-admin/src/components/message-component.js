@@ -1,15 +1,15 @@
 class Message extends HTMLElement {
-  constructor () {
+  constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
   }
 
-  connectedCallback () {
+  connectedCallback() {
     document.addEventListener('message', this.handleMessage.bind(this))
     this.render()
   }
 
-  handleMessage (event) {
+  handleMessage(event) {
     const alertBox = this.shadow.querySelector('.message')
     alertBox.classList.add('active')
 
@@ -20,7 +20,7 @@ class Message extends HTMLElement {
     }, 3000)
   }
 
-  render () {
+  render() {
     this.shadow.innerHTML =
       /* html */ `
         <style>
