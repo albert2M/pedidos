@@ -3,7 +3,7 @@ import { store } from '../redux/store.js'
 import { refreshTable } from '../redux/crud-slice.js'
 
 class Form extends HTMLElement {
-  constructor () {
+  constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.unsubscribe = null
@@ -11,7 +11,7 @@ class Form extends HTMLElement {
     this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.unsubscribe = store.subscribe(() => {
       const currentState = store.getState()
 
@@ -29,11 +29,11 @@ class Form extends HTMLElement {
     this.render()
   }
 
-  render () {
+  render() {
     this.shadow.innerHTML =
       /* html */ `
         <style>
-          *{
+        *{
             box-sizing: border-box;
           }
 
@@ -94,7 +94,7 @@ class Form extends HTMLElement {
           .form-header-tabs ul li{
             height: 2.1rem;
             padding: 0.5rem 1rem;
-            background-color: hsl(258, 58%, 42%);
+            background-color: hsl(200, 100%, 45%);
             font-weight: 700;
             color: hsl(0, 0%, 100%)
           }
@@ -130,10 +130,11 @@ class Form extends HTMLElement {
           }
 
           .form-element-input input{
-            background-color: hsl(240, 92%, 75%);
+            background-color: hsl(215, 70%, 75%);
             color: hsl(0, 0%, 100%);
             padding: 0.2rem 0.5rem;
             width: 100%;
+            border:none
           }
 
           .form-element-input input.error{
@@ -191,13 +192,13 @@ class Form extends HTMLElement {
     this.renderResetButton()
   }
 
-  renderResetButton () {
+  renderResetButton() {
     this.shadow.querySelector('.reset-button').addEventListener('click', async (event) => {
       this.resetForm()
     })
   }
 
-  renderStoreButton () {
+  renderStoreButton() {
     this.shadow.querySelector('.store-button').addEventListener('click', async (event) => {
       event.preventDefault()
       const form = this.shadow.querySelector('form')
