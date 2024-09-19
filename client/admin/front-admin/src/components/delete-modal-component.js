@@ -2,24 +2,30 @@ import { store } from '../redux/store.js'
 import { refreshTable, showFormElement } from '../redux/crud-slice.js'
 
 class DeleteModal extends HTMLElement {
-  constructor () {
+  constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
   }
 
-  connectedCallback () {
+  connectedCallback() {
     document.addEventListener('showDeleteModal', this.handleShowDeleteModal.bind(this))
+    // Dicumento (en cuqalquier parte) escucha evento personalizado 'showDeleteModal'
+    // que se disparará con 'new CustomEvent()'
+    // ¿Por qué se usa bind(this)?
+    /* bind(this) asegura que el contexto de this dentro de la función handleShowFilterModal siempre sea el componente en el que estamos trabajando.
+    Sin el bind(this), el contexto de this podría cambiar cuando el evento sea ejecutado, haciendo que this ya no se refiera a la instancia correcta del componente.
+    handleShowFilterModal, lo que normalmente haría es realizar alguna acción cuando el evento showFilterModal ocurra. */
 
     this.render()
   }
 
-  handleShowDeleteModal (event) {
+  handleShowDeleteModal(event) {
     this.endpoint = event.detail.endpoint
     this.element = event.detail.element
     this.shadow.querySelector('.delete-modal').classList.add('active')
   }
 
-  render () {
+  render() {
     this.shadow.innerHTML =
       /* html */ `
         <style>
