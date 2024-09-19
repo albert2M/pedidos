@@ -133,8 +133,8 @@ class FilterModal extends HTMLElement {
         </div>
     `
 
-    this.shadow.querySelector('.apply-filter').addEventListener('click', () => {
-      this.shadow.querySelector('.form-actions').classList.remove('active')
+    this.shadow.querySelector('.reset-filter').addEventListener('click', () => {
+      this.shadow.querySelector('.filter-modal').classList.remove('active')
     })
   }
 }
