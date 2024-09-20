@@ -155,6 +155,7 @@ class FilterModal extends HTMLElement {
       store.dispatch(applyFilter(queryString))
 
       this.shadow.querySelector('.filter-modal').classList.remove('active')
+      document.getElementsByClassName('filter-form').reset()
     })
   }
 }
