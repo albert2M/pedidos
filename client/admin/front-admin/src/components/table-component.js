@@ -1,6 +1,6 @@
 import isEqual from 'lodash-es/isEqual'
 import { store } from '../redux/store.js'
-import { showFormElement } from '../redux/crud-slice.js'
+import { showFormElement, applyFilter } from '../redux/crud-slice.js'
 
 class Table extends HTMLElement {
   constructor () {
@@ -10,6 +10,7 @@ class Table extends HTMLElement {
     this.unsubscribe = null
     this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
     this.currentPage = 1
+    this.queryString = null
   }
 
   async connectedCallback () {
@@ -20,6 +21,20 @@ class Table extends HTMLElement {
         await this.loadData()
         await this.render()
       }
+
+      if (!isEqual(this.queryString, currentState.crud.queryString)) {
+        this.queryString = currentState.crud.queryString
+        await this.loadData()
+        await this.render()
+
+        if (this.queryString) {
+          const filterButton = this.shadow.querySelector('.filter-button')
+          const filterCancelButton = this.shadow.querySelector('.filter-cancel-button')
+
+          filterButton.classList.remove('active')
+          filterCancelButton.classList.add('active')
+        }
+      }
     })
 
     await this.loadData()
@@ -27,7 +42,9 @@ class Table extends HTMLElement {
   }
 
   async loadData () {
-    const response = await fetch(this.endpoint)
+    const endpoint = this.queryString ? `${this.endpoint}?${this.queryString}` : this.endpoint
+    console.log(endpoint)
+    const response = await fetch(endpoint)
     this.data = await response.json()
   }
 
@@ -73,11 +90,16 @@ class Table extends HTMLElement {
             display: inline-block;
           }
 
-          .filter-button {
+          .filter-button, .filter-cancel-button {
+            display: none;
             background: none;
             border: none;
             cursor: pointer;
             padding: 0;
+          }
+
+          .filter-button.active, .filter-cancel-button.active{
+            display: block;
           }
 
           .filter-form {
@@ -197,31 +219,13 @@ class Table extends HTMLElement {
 
     <section class="table">
       <div class="table-header">
-        <div class="filter-button">          
+        <div class="filter-button active">          
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11L16.76 3.62A1 1 0 0 0 16.59 2.22A1 1 0 0 0 16 2H2A1 1 0 0 0 1.38 2.22A1 1 0 0 0 1.21 3.62L7 11V16.87A1 1 0 0 0 7.29 17.7L9.29 19.7A1 1 0 0 0 10.7 19.7A1 1 0 0 0 11 18.87V11M13 16L18 21L23 16Z" /></svg>                      
         </div>
-        <!-- <form class="filter-form">
-            <div class="form-group">
-              <label for="filter-name">Nombre:</label>
-              <input type="text" id="filter-name" name="filter-name">
-            </div>
-            <div class="form-group">
-              <label for="filter-email">Email:</label>
-              <input type="email" id="filter-email" name="filter-email">
-            </div>
-            <div class="form-group">
-              <label for="filter-creation-date">Fecha de creación:</label>
-              <input type="date" id="filter-creation-date" name="filter-creation-date">
-            </div>
-            <div class="form-group">
-              <label for="filter-update-date">Fecha de actualización:</label>
-              <input type="date" id="filter-update-date" name="filter-update-date">
-            </div>
-            <div class="form-actions">
-              <button type="button" id="apply-filter">Aplicar</button>
-              <button type="reset">Limpiar</button>
-            </div>
-          </form> -->
+
+        <div class="filter-cancel-button">          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.76,20.83L17.6,18L14.76,15.17L16.17,13.76L19,16.57L21.83,13.76L23.24,15.17L20.43,18L23.24,20.83L21.83,22.24L19,19.4L16.17,22.24L14.76,20.83M12,12V19.88C12.04,20.18 11.94,20.5 11.71,20.71C11.32,21.1 10.69,21.1 10.3,20.71L8.29,18.7C8.06,18.47 7.96,18.16 8,17.87V12H7.97L2.21,4.62C1.87,4.19 1.95,3.56 2.38,3.22C2.57,3.08 2.78,3 3,3V3H17V3C17.22,3 17.43,3.08 17.62,3.22C18.05,3.56 18.13,4.19 17.79,4.62L12.03,12H12Z" /></svg>
+        </div>
       </div>
 
       <div class="table-body"></div>
@@ -321,73 +325,80 @@ class Table extends HTMLElement {
 
   renderFilterButton () {
     const filterButton = this.shadow.querySelector('.filter-button')
+    const filterCancelButton = this.shadow.querySelector('.filter-cancel-button')
 
     filterButton.addEventListener('click', (e) => {
       document.dispatchEvent(new CustomEvent('showFilterModal'))
+    })
+
+    filterCancelButton.addEventListener('click', (e) => {
+      store.dispatch(applyFilter(null))
+      filterButton.classList.add('active')
+      filterCancelButton.classList.remove('active')
     })
   }
 
   renderPagination () {
     const paginationContainer = this.shadow.querySelector('.table-pagination')
-    paginationContainer.innerHTML = ''
+    // paginationContainer.innerHTML = ''
 
-    const totalPages = Math.ceil(this.data.length / this.itemsPerPage)
+    // const totalPages = Math.ceil(this.data.length / this.itemsPerPage)
 
     const prevButton = document.createElement('button')
     prevButton.textContent = 'Anterior'
     prevButton.classList.add('pagination-button')
-    prevButton.disabled = this.currentPage === 1
-    prevButton.addEventListener('click', () => this.changePage(this.currentPage - 1))
+    // prevButton.disabled = this.currentPage === 1
+    // prevButton.addEventListener('click', () => this.changePage(this.currentPage - 1))
     paginationContainer.appendChild(prevButton)
 
     const pageInput = document.createElement('input')
-    pageInput.type = 'text' // Tipo inicial como texto para mostrar el número actual
-    pageInput.value = this.data.meta.currentPage
+    pageInput.type = 'intiger' // Tipo inicial como texto para mostrar el número actual
+    // pageInput.value = this.data.meta.currentPage
     pageInput.classList.add('pagination-input')
     pageInput.style.textAlign = 'center' // Para centrar el texto dentro del input
 
     pageInput.addEventListener('click', () => {
       pageInput.type = 'number' // Cambiar a tipo número al hacer click para ingresar un número
-      pageInput.select() // Seleccionar el contenido actual para facilitar la entrada
+      // pageInput.select() // Seleccionar el contenido actual para facilitar la entrada
     })
 
     // Manejar el cambio de página cuando el input pierde el foco o se presiona Enter
-    pageInput.addEventListener('blur', () => this.handlePageInput(pageInput, totalPages))
-    pageInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        this.handlePageInput(pageInput, totalPages)
-      }
-    })
+    // pageInput.addEventListener('blur', () => this.handlePageInput(pageInput, totalPages))
+    // pageInput.addEventListener('keypress', (e) => {
+    //   if (e.key === 'Enter') {
+    //     this.handlePageInput(pageInput, totalPages)
+    //   }
+    // })
 
     paginationContainer.appendChild(pageInput)
 
     const nextButton = document.createElement('button')
     nextButton.textContent = 'Siguiente'
     nextButton.classList.add('pagination-button')
-    nextButton.disabled = this.currentPage === totalPages
-    nextButton.addEventListener('click', () => this.changePage(this.currentPage + 1))
+    // nextButton.disabled = this.currentPage === totalPages
+    // nextButton.addEventListener('click', () => this.changePage(this.currentPage + 1))
     paginationContainer.appendChild(nextButton)
   }
 
-  handlePageInput (inputElement, totalPages) {
-    const pageNumber = parseInt(inputElement.value, 10)
+  // handlePageInput (inputElement, totalPages) {
+  //   const pageNumber = parseInt(inputElement.value, 10)
 
-    if (isNaN(pageNumber) || pageNumber < 1) {
-      inputElement.value = this.currentPage // Restaurar el número actual si la entrada es inválida
-    } else if (pageNumber > totalPages) {
-      this.changePage(totalPages) // Ir a la última página si el número ingresado es mayor al total de páginas
-    } else {
-      this.changePage(pageNumber) // Cambiar a la página deseada
-    }
+  //   if (isNaN(pageNumber) || pageNumber < 1) {
+  //     inputElement.value = this.currentPage // Restaurar el número actual si la entrada es inválida
+  //   } else if (pageNumber > totalPages) {
+  //     this.changePage(totalPages) // Ir a la última página si el número ingresado es mayor al total de páginas
+  //   } else {
+  //     this.changePage(pageNumber) // Cambiar a la página deseada
+  //   }
 
-    inputElement.type = 'text' // Volver a mostrar como texto el número de la página
-    inputElement.value = this.currentPage // Actualizar el valor mostrado en el input
-  }
+  //   inputElement.type = 'text' // Volver a mostrar como texto el número de la página
+  //   inputElement.value = this.currentPage // Actualizar el valor mostrado en el input
+  // }
 
-  changePage (pageNumber) {
-    this.currentPage = pageNumber
-    this.render()
-  }
+  // changePage (pageNumber) {
+  //   this.currentPage = pageNumber
+  //   this.render()
+  // }
 }
 
 customElements.define('table-component', Table)

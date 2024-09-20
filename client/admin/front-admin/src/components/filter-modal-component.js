@@ -1,22 +1,24 @@
+import isEqual from 'lodash-es/isEqual'
 import { store } from '../redux/store.js'
-import { refreshTable } from '../redux/crud-slice.js'
+import { applyFilter } from '../redux/crud-slice.js'
 
 class FilterModal extends HTMLElement {
-  constructor() {
+  constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
+    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
   }
 
-  connectedCallback() {
+  connectedCallback () {
     document.addEventListener('showFilterModal', this.handleShowFilterModal.bind(this))
     this.render()
   }
 
-  handleShowFilterModal(event) {
+  handleShowFilterModal (event) {
     this.shadow.querySelector('.filter-modal').classList.add('active')
   }
 
-  render() {
+  render () {
     this.shadow.innerHTML =
       /* html */ `
         <style>
@@ -134,6 +136,24 @@ class FilterModal extends HTMLElement {
     `
 
     this.shadow.querySelector('.reset-filter').addEventListener('click', () => {
+      this.shadow.querySelector('.filter-modal').classList.remove('active')
+    })
+    this.shadow.querySelector('.apply-filter').addEventListener('click', (event) => {
+      event.preventDefault()
+      const form = this.shadow.querySelector('form')
+      const formData = new FormData(form)
+      const formDataJson = {}
+
+      for (const [key, value] of formData.entries()) {
+        formDataJson[key] = value !== '' ? value : null
+      }
+
+      const queryString = Object.entries(formDataJson).map(([key, value]) => {
+        return `${key}=${value}`
+      }).join('&')
+
+      store.dispatch(applyFilter(queryString))
+
       this.shadow.querySelector('.filter-modal').classList.remove('active')
     })
   }
