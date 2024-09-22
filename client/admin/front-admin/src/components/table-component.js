@@ -3,17 +3,17 @@ import { store } from '../redux/store.js'
 import { showFormElement, applyFilter } from '../redux/crud-slice.js'
 
 class Table extends HTMLElement {
-  constructor () {
+  constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.data = []
     this.unsubscribe = null
     this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
-    this.currentPage = 1
     this.queryString = null
+    this.page = 1
   }
 
-  async connectedCallback () {
+  async connectedCallback() {
     this.unsubscribe = store.subscribe(async () => {
       const currentState = store.getState()
 
@@ -41,17 +41,13 @@ class Table extends HTMLElement {
     await this.render()
   }
 
-  async loadData () {
-    const endpoint = this.queryString ? `${this.endpoint}?${this.queryString}` : this.endpoint
-    console.log(endpoint)
+  async loadData() {
+    const endpoint = this.queryString ? `${this.endpoint}?${this.queryString}}&page=${this.page}` : `${this.endpoint}?page=${this.page}`
     const response = await fetch(endpoint)
     this.data = await response.json()
   }
 
-  render () {
-    // const startIndex = (this.currentPage - 1) * this.itemsPerPage
-    // const endIndex = startIndex + this.itemsPerPage
-    // const pageData = this.data.slice(startIndex, endIndex)
+  render() {
     this.shadow.innerHTML =
       /* html */ `
        
@@ -158,62 +154,79 @@ class Table extends HTMLElement {
           }
 
           .table-footer{
+                align-items: center;
+                display: flex;
+                justify-content: space-between;
+            }
+
+          .table-info{
+              background-color: hsl(0, 0%, 100%);
+              display: flex;
+              justify-content: space-between;
+              padding: 0.5rem;
+              width: 100%;  
+          }
+
+          .table-info p{
+              color: hsl(0, 0%, 29%);   
+              font-weight: 700;
+              margin: 0;
+          }
+          .table-page-buttons{
+            align-items: center;
             display: flex;
-            justify-content: space-between;
-            background-color: hsl(0, 0%, 100%);
-            padding: 0.2rem 0.5rem;
+            gap: 0.5rem;
           }
 
-          .table-info span{
-            color: hsl(#2323F6);
-            font-weight: 700;
-            padding: 0.5rem;
-          }
-
-          .pagination-button {
+          .table-page-button{
             cursor: pointer;
-            padding: 0.2rem 0.5rem;
-            background-color: hsl(240, 92%, 25%);
-            color: white;
-            margin: 0 0.25rem;
-            border-radius: 0.25rem;
+            fill: hsl(225, 63%, 65%);
+            height: 1.5rem;
+            width: 1.5rem;
+          }
+
+          .current-page{
+            align-items: center;
+            display: flex;
+            height: 1.5rem;
+            width: 4rem;
+          }
+
+          .current-page input{
             border: none;
-          }
-          .pagination-button[disabled] {
-            background-color: grey;
-            cursor: not-allowed;
-          }
-
-          .pagination-input {
-            width: calc(1ch * var(--max-digits, 3));
-            padding: 0.2rem;
-            font-size: 0.8rem;
-            border: 1px solid #ccc;
-            border-radius: 0.25rem;
-            text-align: center;
+            border-radius: 0.5rem;
+            color: hsl(225, 63%, 65%);
+            font-weight: 600;
             outline: none;
-            transition: border-color 0.2s;
-            width: 5rem;
-          }
-          
-          .pagination-input[data-max-digits='1'] {
-            width: calc(1ch * 1);
+            text-align: center;
+            width: 100%;
           }
 
-          .pagination-input[data-max-digits='2'] {
-            width: calc(1ch * 2);
+          .current-page label{
+            border: 1px solid  hsl(225, 63%, 65%);
+            border-radius: 0.5rem;
+            display: flex;
+            gap: 0.2rem;
+            padding: 0 0.2rem;
           }
 
-          .pagination-input[data-max-digits='3'] {
-            width: calc(1ch * 3);
+          .current-page button{
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            padding: 0;
           }
 
-          .pagination-input[data-max-digits='4'] {
-            width: calc(1ch * 4);
+          .current-page svg{
+            fill: hsl(225, 63%, 65%);
+            width: 1.5rem;
           }
 
-          .pagination-input:focus {
-            border-color: #007bff; /* Cambia el color del borde al hacer focus */
+          input[type="number"]::-webkit-outer-spin-button,
+          input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
           }
     </style>
 
@@ -231,10 +244,35 @@ class Table extends HTMLElement {
       <div class="table-body"></div>
 
       <div class="table-footer">
-        <div class="table-info">
-            <span>${this.data.count} ${this.data.count > 1 ? 'registros' : 'registro'} en total, mostrando ${this.data.meta.size} por página</span>
-        </div>
-        <div class="table-pagination"></div>
+      <div class="table-info">
+        <div>
+            <p>
+              ${this.data.count} ${this.data.count === 1 ? 'registro' : 'registros'} en total, mostrando ${this.data.meta.size} por página
+            </p>  
+        </div>                 
+        <div class="table-page-buttons">
+          <div class="table-page-button" data-page="1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.41,7.41L17,6L11,12L17,18L18.41,16.59L13.83,12L18.41,7.41M12.41,7.41L11,6L5,12L11,18L12.41,16.59L7.83,12L12.41,7.41Z" /></svg>
+          </div>  
+          <div class="table-page-button" data-page="${this.data.meta.currentPage > 1 ? parseInt(this.data.meta.currentPage) - 1 : 1}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>chevron-left</title><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>                     
+          </div>  
+          <div class="current-page">
+            <label>
+              <input type="number" value="${this.data.meta.currentPage}"> 
+              <button class="go-to-page">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4,10V14H13L9.5,17.5L11.92,19.92L19.84,12L11.92,4.08L9.5,6.5L13,10H4Z" /></svg>
+              </button>
+            </label>
+          </div>
+          <div class="table-page-button" data-page="${parseInt(this.data.meta.currentPage) + 1}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>chevron-right</title><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+          </div>  
+          <div class="table-page-button" data-page="${this.data.meta.pages}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>chevron-double-right</title><path d="M5.59,7.41L7,6L13,12L7,18L5.59,16.59L10.17,12L5.59,7.41M11.59,7.41L13,6L19,12L13,18L11.59,16.59L16.17,12L11.59,7.41Z" /></svg>                      
+          </div>  
+        </div>                 
+      </div>
       </div>
     </section>
     `
@@ -271,12 +309,6 @@ class Table extends HTMLElement {
       tableRegisterContent.classList.add('table-register-content')
       tableRegister.appendChild(tableRegisterContent)
 
-      // Object.entries(element).forEach(([key, value]) => {
-      //   const elementItemList = document.createElement('li')
-      //   elementItemList.textContent = `${key}: ${value}`
-      //   tableRegisterContent.appendChild(elementItemList)
-      // })
-
       let elementItemList = document.createElement('li')
       elementItemList.textContent = `nombre: ${element.name}`
       tableRegisterContent.appendChild(elementItemList)
@@ -295,7 +327,7 @@ class Table extends HTMLElement {
     this.renderPagination() // Llamada para renderizar la paginación
   }
 
-  async renderRegisterButtons () {
+  async renderRegisterButtons() {
     this.shadow.querySelector('.table-body').addEventListener('click', async (event) => {
       if (event.target.closest('.edit-button')) {
         const id = event.target.closest('.edit-button').dataset.id
@@ -323,7 +355,7 @@ class Table extends HTMLElement {
     })
   }
 
-  renderFilterButton () {
+  renderFilterButton() {
     const filterButton = this.shadow.querySelector('.filter-button')
     const filterCancelButton = this.shadow.querySelector('.filter-cancel-button')
 
@@ -338,67 +370,36 @@ class Table extends HTMLElement {
     })
   }
 
-  renderPagination () {
-    const paginationContainer = this.shadow.querySelector('.table-pagination')
-    // paginationContainer.innerHTML = ''
+  renderPagination() {
+    this.shadow.querySelector('.go-to-page').addEventListener('click', async event => {
+      const page = this.shadow.querySelector('.current-page input').value
 
-    // const totalPages = Math.ceil(this.data.length / this.itemsPerPage)
-
-    const prevButton = document.createElement('button')
-    prevButton.textContent = 'Anterior'
-    prevButton.classList.add('pagination-button')
-    // prevButton.disabled = this.currentPage === 1
-    // prevButton.addEventListener('click', () => this.changePage(this.currentPage - 1))
-    paginationContainer.appendChild(prevButton)
-
-    const pageInput = document.createElement('input')
-    pageInput.type = 'intiger' // Tipo inicial como texto para mostrar el número actual
-    // pageInput.value = this.data.meta.currentPage
-    pageInput.classList.add('pagination-input')
-    pageInput.style.textAlign = 'center' // Para centrar el texto dentro del input
-
-    pageInput.addEventListener('click', () => {
-      pageInput.type = 'number' // Cambiar a tipo número al hacer click para ingresar un número
-      // pageInput.select() // Seleccionar el contenido actual para facilitar la entrada
+      if (!page || page < 1 || page.includes('.') || page.includes(',')) {
+        this.shadow.querySelector('.current-page input').value = this.page
+      } else if (page > this.data.meta.pages) {
+        document.dispatchEvent(new CustomEvent('message', {
+          detail: {
+            message: `No se puede acceder a la página ${page}, solo hay ${this.data.meta.pages} ${this.data.meta.pages === 1 ? 'página disponible' : 'páginas disponibles'} `,
+            type: 'error'
+          }
+        }))
+        this.shadow.querySelector('.current-page input').value = this.page
+      } else {
+        this.page = page
+        await this.loadData()
+        await this.render()
+      }
     })
 
-    // Manejar el cambio de página cuando el input pierde el foco o se presiona Enter
-    // pageInput.addEventListener('blur', () => this.handlePageInput(pageInput, totalPages))
-    // pageInput.addEventListener('keypress', (e) => {
-    //   if (e.key === 'Enter') {
-    //     this.handlePageInput(pageInput, totalPages)
-    //   }
-    // })
-
-    paginationContainer.appendChild(pageInput)
-
-    const nextButton = document.createElement('button')
-    nextButton.textContent = 'Siguiente'
-    nextButton.classList.add('pagination-button')
-    // nextButton.disabled = this.currentPage === totalPages
-    // nextButton.addEventListener('click', () => this.changePage(this.currentPage + 1))
-    paginationContainer.appendChild(nextButton)
+    this.shadow.querySelector('.table-footer').addEventListener('click', async (event) => {
+      if (event.target.closest('.table-page-button')) {
+        const pageButton = event.target.closest('.table-page-button')
+        this.page = pageButton.dataset.page
+        await this.loadData()
+        await this.render()
+      }
+    })
   }
-
-  // handlePageInput (inputElement, totalPages) {
-  //   const pageNumber = parseInt(inputElement.value, 10)
-
-  //   if (isNaN(pageNumber) || pageNumber < 1) {
-  //     inputElement.value = this.currentPage // Restaurar el número actual si la entrada es inválida
-  //   } else if (pageNumber > totalPages) {
-  //     this.changePage(totalPages) // Ir a la última página si el número ingresado es mayor al total de páginas
-  //   } else {
-  //     this.changePage(pageNumber) // Cambiar a la página deseada
-  //   }
-
-  //   inputElement.type = 'text' // Volver a mostrar como texto el número de la página
-  //   inputElement.value = this.currentPage // Actualizar el valor mostrado en el input
-  // }
-
-  // changePage (pageNumber) {
-  //   this.currentPage = pageNumber
-  //   this.render()
-  // }
 }
 
 customElements.define('table-component', Table)
