@@ -1,4 +1,3 @@
-import isEqual from 'lodash-es/isEqual'
 import { store } from '../redux/store.js'
 import { applyFilter } from '../redux/crud-slice.js'
 

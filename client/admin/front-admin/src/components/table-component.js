@@ -3,7 +3,7 @@ import { store } from '../redux/store.js'
 import { showFormElement, applyFilter } from '../redux/crud-slice.js'
 
 class Table extends HTMLElement {
-  constructor() {
+  constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.data = []
@@ -13,7 +13,7 @@ class Table extends HTMLElement {
     this.page = 1
   }
 
-  async connectedCallback() {
+  async connectedCallback () {
     this.unsubscribe = store.subscribe(async () => {
       const currentState = store.getState()
 
@@ -41,13 +41,13 @@ class Table extends HTMLElement {
     await this.render()
   }
 
-  async loadData() {
-    const endpoint = this.queryString ? `${this.endpoint}?${this.queryString}}&page=${this.page}` : `${this.endpoint}?page=${this.page}`
+  async loadData () {
+    const endpoint = this.queryString ? `${this.endpoint}?${this.queryString}&page=${this.page}` : `${this.endpoint}?page=${this.page}`
     const response = await fetch(endpoint)
     this.data = await response.json()
   }
 
-  render() {
+  render () {
     this.shadow.innerHTML =
       /* html */ `
        
@@ -265,7 +265,7 @@ class Table extends HTMLElement {
               </button>
             </label>
           </div>
-          <div class="table-page-button" data-page="${parseInt(this.data.meta.currentPage) + 1}">
+          <div class="table-page-button" data-page="${parseInt(this.data.meta.currentPage) + 1 < this.data.meta.pages ? parseInt(this.data.meta.currentPage) + 1 : this.data.meta.pages}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>chevron-right</title><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
           </div>  
           <div class="table-page-button" data-page="${this.data.meta.pages}">
@@ -327,7 +327,7 @@ class Table extends HTMLElement {
     this.renderPagination() // Llamada para renderizar la paginación
   }
 
-  async renderRegisterButtons() {
+  async renderRegisterButtons () {
     this.shadow.querySelector('.table-body').addEventListener('click', async (event) => {
       if (event.target.closest('.edit-button')) {
         const id = event.target.closest('.edit-button').dataset.id
@@ -355,7 +355,7 @@ class Table extends HTMLElement {
     })
   }
 
-  renderFilterButton() {
+  renderFilterButton () {
     const filterButton = this.shadow.querySelector('.filter-button')
     const filterCancelButton = this.shadow.querySelector('.filter-cancel-button')
 
@@ -370,7 +370,7 @@ class Table extends HTMLElement {
     })
   }
 
-  renderPagination() {
+  renderPagination () {
     this.shadow.querySelector('.go-to-page').addEventListener('click', async event => {
       const page = this.shadow.querySelector('.current-page input').value
 
