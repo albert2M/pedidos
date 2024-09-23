@@ -2,12 +2,12 @@ import { store } from '../redux/store.js'
 import { refreshTable, showFormElement } from '../redux/crud-slice.js'
 
 class DeleteModal extends HTMLElement {
-  constructor() {
+  constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
   }
 
-  connectedCallback() {
+  connectedCallback () {
     document.addEventListener('showDeleteModal', this.handleShowDeleteModal.bind(this))
     // Dicumento (en cuqalquier parte) escucha evento personalizado 'showDeleteModal'
     // que se disparará con 'new CustomEvent()'
@@ -19,13 +19,13 @@ class DeleteModal extends HTMLElement {
     this.render()
   }
 
-  handleShowDeleteModal(event) {
+  handleShowDeleteModal (event) {
     this.endpoint = event.detail.endpoint
     this.element = event.detail.element
     this.shadow.querySelector('.delete-modal').classList.add('active')
   }
 
-  render() {
+  render () {
     this.shadow.innerHTML =
       /* html */ `
         <style>
@@ -77,7 +77,7 @@ class DeleteModal extends HTMLElement {
           }
 
           .cancel {
-            background-color: grey;
+            background-color: green;
             color: white;
           }     
         </style>

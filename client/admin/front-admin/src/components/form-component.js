@@ -3,7 +3,7 @@ import { store } from '../redux/store.js'
 import { refreshTable } from '../redux/crud-slice.js'
 
 class Form extends HTMLElement {
-  constructor() {
+  constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.unsubscribe = null
@@ -11,7 +11,7 @@ class Form extends HTMLElement {
     this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.unsubscribe = store.subscribe(() => {
       const currentState = store.getState()
 
@@ -29,7 +29,7 @@ class Form extends HTMLElement {
     this.render()
   }
 
-  render() {
+  render () {
     this.shadow.innerHTML =
       /* html */ `
         <style>
@@ -41,6 +41,7 @@ class Form extends HTMLElement {
             list-style: none;
             margin: 0;
             padding: 0;
+            cursor: pointer
           }
 
           svg{
@@ -192,13 +193,13 @@ class Form extends HTMLElement {
     this.renderResetButton()
   }
 
-  renderResetButton() {
+  renderResetButton () {
     this.shadow.querySelector('.reset-button').addEventListener('click', async (event) => {
       this.resetForm()
     })
   }
 
-  renderStoreButton() {
+  renderStoreButton () {
     this.shadow.querySelector('.store-button').addEventListener('click', async (event) => {
       event.preventDefault()
       const form = this.shadow.querySelector('form')
