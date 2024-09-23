@@ -19,7 +19,7 @@ module.exports = function (sequelize, DataTypes) { // module.exports exporta; y 
           }
         }
       },
-      fiscallName: {
+      fiscalName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {

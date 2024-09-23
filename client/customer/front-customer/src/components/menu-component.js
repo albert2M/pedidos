@@ -1,16 +1,17 @@
 class Menu extends HTMLElement {
-    constructor () {
-      super()
-      this.shadow = this.attachShadow({ mode: 'open' })
-    }
-  
-    connectedCallback () {
-      this.render()
-    }
-  
-    render () {
-      this.shadow.innerHTML =
-      /*html*/`
+  constructor () {
+    super()
+    this.shadow = this.attachShadow({ mode: 'open' })
+  }
+
+  connectedCallback () {
+    this.loadData()
+    this.render()
+  }
+
+  render () {
+    this.shadow.innerHTML =
+      /* html */`
         <style>
           .menu {
             margin-top: 2rem;  
@@ -46,7 +47,7 @@ class Menu extends HTMLElement {
             </div>
         </section>
         `
-      }
   }
-  
-  customElements.define('menu-component', Menu)
+}
+
+customElements.define('menu-component', Menu)

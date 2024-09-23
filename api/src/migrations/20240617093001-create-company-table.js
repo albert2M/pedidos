@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      fiscallName: {
+      fiscalName: {
         type: Sequelize.STRING,
         allowNull: false
       },
