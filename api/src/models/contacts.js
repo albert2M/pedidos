@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) { // module.exports exporta; y 
         allowNull: false
       },
       fingerprintId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
       },
       name: {

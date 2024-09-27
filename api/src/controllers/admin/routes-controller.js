@@ -5,7 +5,8 @@ exports.findAll = (req, res) => {
     '/admin/faqs': 'faqs.html',
     '/admin/empresas': 'companies.html',
     '/admin/categorias': 'product-categories.html',
-    '/admin/productos': 'products.html'
+    '/admin/productos': 'products.html',
+    '/admin/contactos': 'contacts.html'
   }
 
   res.status(200).send(routes)

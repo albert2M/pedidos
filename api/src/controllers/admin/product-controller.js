@@ -1,4 +1,4 @@
-const sequelizeDb = require('../../models')  
+const sequelizeDb = require('../../models')
 const Product = sequelizeDb.Product
 const Op = sequelizeDb.Sequelize.Op
 
@@ -9,10 +9,9 @@ exports.create = (req, res) => {
     if (err.errors) {
       res.status(422).send({
         message: err.errors
-        
+
       })
-    }
-    else {
+    } else {
       res.status(500).send({
         message: 'Algún error ha surgido al insertar el dato.'
       })
@@ -21,8 +20,7 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  
-  const page = req.query.page || 1   //Como .findAll no recibe parámetros, puede recibir querys y query es para filtrar muchos datos
+  const page = req.query.page || 1 // Como .findAll no recibe parámetros, puede recibir querys y query es para filtrar muchos datos
   const limit = parseInt(req.query.size) || 10
   const offset = (page - 1) * limit
   const whereStatement = {}
@@ -37,7 +35,7 @@ exports.findAll = (req, res) => {
 
   Product.findAndCountAll({
     where: condition,
-    attributes: ['id', 'productCategoryId','name', 'reference', 'units', 'measurementUnit', 'measurement', 'visible', 'createdAt', 'updatedAt'],
+    attributes: ['id', 'productCategoryId', 'name', 'reference', 'units', 'measurementUnit', 'measurement', 'visible', 'createdAt', 'updatedAt'],
     limit,
     offset,
     order: [['createdAt', 'DESC']]

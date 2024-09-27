@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) { // module.exports exporta; y 
       },
 
       productCategoryId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
       },
 

@@ -1,4 +1,4 @@
-const sequelizeDb = require('../../models')  
+const sequelizeDb = require('../../models')
 const ProductCategory = sequelizeDb.ProductCategory
 const Op = sequelizeDb.Sequelize.Op
 
@@ -19,8 +19,7 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  
-  const page = req.query.page || 1   //Como .findAll no recibe parámetros, puede recibir querys y query es para filtrar muchos datos
+  const page = req.query.page || 1 // Como .findAll no recibe parámetros, puede recibir querys y query es para filtrar muchos datos
   const limit = parseInt(req.query.size) || 10
   const offset = (page - 1) * limit
   const whereStatement = {}

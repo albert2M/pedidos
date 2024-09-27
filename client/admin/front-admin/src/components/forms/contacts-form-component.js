@@ -2,13 +2,13 @@ import isEqual from 'lodash-es/isEqual'
 import { store } from '../../redux/store.js'
 import { refreshTable } from '../../redux/crud-slice.js'
 
-class ProductCategoryForm extends HTMLElement {
+class ContactsForm extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.unsubscribe = null
     this.formElementData = null
-    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/product-categories`
+    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/contacts`
   }
 
   connectedCallback () {
@@ -180,13 +180,45 @@ class ProductCategoryForm extends HTMLElement {
 
                 <div class="form-element">
                   <div class="form-element-label">
-                    <label>Categoria</label>
+                    <label>fingerprintId</label>
+                  </div>
+                  <div class="form-element-input">
+                    <input type="number" name="fingerprintId">
+                  </div>
+                </div>
+
+                <div class="form-element">
+                  <div class="form-element-label">
+                    <label>Nombre</label>
                   </div>
                   <div class="form-element-input">
                     <input type="text" name="name">
                   </div>
                 </div>
-                
+                <div class="form-element">
+                  <div class="form-element-label">
+                    <label>Email</label>
+                  </div>
+                  <div class="form-element-input">
+                    <input type="email" name="email">
+                  </div>
+                </div>
+                <div class="form-element">
+                  <div class="form-element-label">
+                    <label>Asunto</label>
+                  </div>
+                  <div class="form-element-input">
+                    <input type="text" name="subject">
+                  </div>
+                </div>
+                <div class="form-element">
+                  <div class="form-element-label">
+                    <label>Mensaje</label>
+                  </div>
+                  <div class="form-element-input">
+                    <textarea name="message"></textarea>
+                  </div>
+                </div>
               </div>
             </form>
           </div>
@@ -223,10 +255,6 @@ class ProductCategoryForm extends HTMLElement {
       event.preventDefault()
       const form = this.shadow.querySelector('form')
       const formData = new FormData(form)
-
-      // for (const pair of formData.entries()) {
-      //   console.log(pair[0] + ', ' + pair[1]) Todo esto es para ver por el inspector que es lo que se está capturando
-      // }
 
       const formDataJson = {}
 
@@ -314,4 +342,4 @@ class ProductCategoryForm extends HTMLElement {
   }
 }
 
-customElements.define('productCategory-form-component', ProductCategoryForm)
+customElements.define('contacts-form-component', ContactsForm)

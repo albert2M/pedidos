@@ -12,7 +12,7 @@ module.exports = {
       },
 
       productCategoryId: {
-        type: Sequelize.INTEGER,  
+        type: Sequelize.STRING,
         allowNull: false,
         references: {
           model: 'product_categories',
@@ -31,26 +31,25 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      
+
       units: {
         type: Sequelize.INTEGER,
-        
+
         allowNull: false
       },
 
       measurementUnit: {
         type: Sequelize.STRING,
-       
-        
+
         allowNull: false
       },
 
-      measurement:{
+      measurement: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
 
-      visible:{
+      visible: {
         type: Sequelize.BOOLEAN,
         allowNull: false
       },
@@ -72,8 +71,7 @@ module.exports = {
 
     await queryInterface.addIndex('products', ['productCategoryId'], {
       name: 'products_productCategoryId_index'
-    }) 
-    
+    })
   },
 
   down: async (queryInterface, Sequelize) => {

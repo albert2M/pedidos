@@ -2,13 +2,13 @@ import isEqual from 'lodash-es/isEqual'
 import { store } from '../../redux/store.js'
 import { showFormElement, applyFilter } from '../../redux/crud-slice.js'
 
-class ProductCategoryTable extends HTMLElement {
+class ContactsTable extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.data = []
     this.unsubscribe = null
-    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/product-categories`
+    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/contacts`
     this.queryString = null
     this.page = 1
   }
@@ -310,7 +310,11 @@ class ProductCategoryTable extends HTMLElement {
       tableRegister.appendChild(tableRegisterContent)
 
       let elementItemList = document.createElement('li')
-      elementItemList.textContent = `category: ${element.nameCategory}`
+      elementItemList.textContent = `nombre: ${element.name}`
+      tableRegisterContent.appendChild(elementItemList)
+
+      elementItemList = document.createElement('li')
+      elementItemList.textContent = `email: ${element.email}`
       tableRegisterContent.appendChild(elementItemList)
 
       elementItemList = document.createElement('li')
@@ -327,7 +331,7 @@ class ProductCategoryTable extends HTMLElement {
     this.shadow.querySelector('.table-body').addEventListener('click', async (event) => {
       if (event.target.closest('.edit-button')) {
         const id = event.target.closest('.edit-button').dataset.id
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/contacts/${id}`)
         const data = await response.json()
 
         const formElement = {
@@ -398,4 +402,4 @@ class ProductCategoryTable extends HTMLElement {
   }
 }
 
-customElements.define('productCategory-table-component', ProductCategoryTable)
+customElements.define('contacts-table-component', ContactsTable)

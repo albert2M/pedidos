@@ -51,8 +51,7 @@ module.exports = {
 
     await queryInterface.addIndex('contacts', ['fingerprintId'], {
       name: 'contacts_fingerprintId_index'
-    }) 
-
+    })
   },
 
   down: async (queryInterface, Sequelize) => {
