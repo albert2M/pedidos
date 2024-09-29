@@ -3,7 +3,7 @@ import { store } from '../../redux/store.js'
 import { refreshTable } from '../../redux/crud-slice.js'
 
 class ProductsForm extends HTMLElement {
-  constructor () {
+  constructor() {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.unsubscribe = null
@@ -11,7 +11,7 @@ class ProductsForm extends HTMLElement {
     this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/products`
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.unsubscribe = store.subscribe(() => {
       const currentState = store.getState()
 
@@ -29,7 +29,7 @@ class ProductsForm extends HTMLElement {
     this.render()
   }
 
-  render () {
+  render() {
     this.shadow.innerHTML =
       /* html */ `
         <style>
@@ -119,13 +119,19 @@ class ProductsForm extends HTMLElement {
 
           .tab-content.active{
             display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
+            <!-- gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) -->
+          }
+          
+          .elements-container {
+            display: flex;
+           justify-content: space-between;
+            gap: 0.5rem;
           }
 
           .form-element{
             display: flex;
-            flex-direction: column;
+           justify-content: space-between;
             gap: 0.5rem;
           }
 
@@ -135,7 +141,7 @@ class ProductsForm extends HTMLElement {
           }
 
           .form-element-input{
-            width: 100%;
+            <!-- width: 100%; -->
           }
 
           .form-element-input input{
@@ -143,6 +149,14 @@ class ProductsForm extends HTMLElement {
             color: hsl(0, 0%, 100%);
             padding: 0.2rem 0.5rem;
             width: 100%;
+            border:none
+          }
+
+          .form-element-input select {
+            background-color: hsl(215, 70%, 75%);
+            color: hsl(0, 0%, 100%);
+            padding: 0.2rem 0.5rem;
+            width: 400%;
             border:none
           }
 
@@ -178,38 +192,46 @@ class ProductsForm extends HTMLElement {
               <div class="tab-content active" data-tab="general">
                 <input type="hidden" name="id">
 
-                <div class="form-element">
-                  <div class="form-element-label">
-                    <label>Id</label>
-                  </div>
-                  <div class="form-element-input">
-                    <input type="number" name="id">
-                  </div>
+                <div class="elements-container">
 
                   <div class="form-element">
-                  <div class="form-element-label">
-                    <label>Categoria</label>
-                  </div>
-                  <div class="form-element-input">
-                    <input type="text" name="category">
+                    <div class="form-element-label">
+                      <label>Id</label>
+                    </div>
+                    <div class="form-element-input">
+                      <input type="number" name="id">
+                    </div>
                   </div>
 
-                <div class="form-element">
-                  <div class="form-element-label">
-                    <label>Nombre</label>
+                    <div class="form-element">
+                      <div class="form-element-label">
+                        <label>Categoria</label>
+                      </div>
+                      <div class="form-element-input">
+                        <select name="options"></select>
+                      </div>
+                    </div>
+
+                  <div class="form-element">
+                    <div class="form-element-label">
+                      <label>Nombre</label>
+                    </div>
+                    <div class="form-element-input">
+                      <input type="text" name="name">
+                    </div>
+                  </div>  
+
+                  <div class="form-element">
+                    <div class="form-element-label">
+                      <label>Referencia</label>
+                    </div>
+                    <div class="form-element-input">
+                      <input type="text" name="reference">
+                    </div>
                   </div>
-                  <div class="form-element-input">
-                    <input type="text" name="name">
-                  </div>
+                  
                 </div>
-                <div class="form-element">
-                  <div class="form-element-label">
-                    <label>Referencia</label>
-                  </div>
-                  <div class="form-element-input">
-                    <input type="text" name="reference">
-                  </div>
-                </div>
+
               </div>
             </form>
           </div>
@@ -220,13 +242,13 @@ class ProductsForm extends HTMLElement {
     this.renderTabsButton()
   }
 
-  renderResetButton () {
+  renderResetButton() {
     this.shadow.querySelector('.reset-button').addEventListener('click', async (event) => {
       this.resetForm()
     })
   }
 
-  renderTabsButton () {
+  renderTabsButton() {
     this.shadow.querySelector('.form').addEventListener('click', async (event) => {
       if (event.target.closest('.tab')) {
         const tab = event.target.closest('.tab')
@@ -241,7 +263,7 @@ class ProductsForm extends HTMLElement {
     })
   }
 
-  renderStoreButton () {
+  renderStoreButton() {
     this.shadow.querySelector('.store-button').addEventListener('click', async (event) => {
       event.preventDefault()
       const form = this.shadow.querySelector('form')
