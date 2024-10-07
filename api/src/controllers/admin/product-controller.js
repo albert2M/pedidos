@@ -1,15 +1,20 @@
 const sequelizeDb = require('../../models')
 const Product = sequelizeDb.Product
+const Price = sequelizeDb.Price
 const Op = sequelizeDb.Sequelize.Op
 
 exports.create = (req, res) => {
   Product.create(req.body).then(async data => {
+    req.body.productId = data.id
+    req.body.current = true
+
+    await Price.create(req.body)
     res.status(200).send(data)
   }).catch(err => {
+    console.log(err)
     if (err.errors) {
       res.status(422).send({
         message: err.errors
-
       })
     } else {
       res.status(500).send({

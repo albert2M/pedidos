@@ -314,7 +314,7 @@ class ProductTable extends HTMLElement {
       tableRegisterContent.appendChild(elementItemList)
 
       elementItemList = document.createElement('li')
-      elementItemList.textContent = `email: ${element.email}`
+      elementItemList.textContent = `referencia: ${element.reference}`
       tableRegisterContent.appendChild(elementItemList)
 
       elementItemList = document.createElement('li')

@@ -310,7 +310,7 @@ class ProductCategoryTable extends HTMLElement {
       tableRegister.appendChild(tableRegisterContent)
 
       let elementItemList = document.createElement('li')
-      elementItemList.textContent = `category: ${element.nameCategory}`
+      elementItemList.textContent = `categoría: ${element.name}`
       tableRegisterContent.appendChild(elementItemList)
 
       elementItemList = document.createElement('li')
@@ -327,7 +327,7 @@ class ProductCategoryTable extends HTMLElement {
     this.shadow.querySelector('.table-body').addEventListener('click', async (event) => {
       if (event.target.closest('.edit-button')) {
         const id = event.target.closest('.edit-button').dataset.id
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/product-categories/${id}`)
         const data = await response.json()
 
         const formElement = {

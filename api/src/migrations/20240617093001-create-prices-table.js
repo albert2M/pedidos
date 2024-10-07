@@ -21,7 +21,7 @@ module.exports = {
         onDelete: 'NO ACTION'
       },
       basePrice: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
       current: {
@@ -44,7 +44,6 @@ module.exports = {
     await queryInterface.addIndex('prices', ['productId'], {
       name: 'prices_productId_index'
     })
-
   },
 
   down: async (queryInterface, Sequelize) => {

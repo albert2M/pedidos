@@ -3,7 +3,7 @@ import { store } from '../../redux/store.js'
 import { refreshTable } from '../../redux/crud-slice.js'
 
 class ProductsForm extends HTMLElement {
-  constructor() {
+  constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
     this.unsubscribe = null
@@ -11,7 +11,7 @@ class ProductsForm extends HTMLElement {
     this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/products`
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.unsubscribe = store.subscribe(() => {
       const currentState = store.getState()
 
@@ -29,7 +29,7 @@ class ProductsForm extends HTMLElement {
     this.render()
   }
 
-  render() {
+  render () {
     this.shadow.innerHTML =
       /* html */ `
         <style>
@@ -119,19 +119,17 @@ class ProductsForm extends HTMLElement {
 
           .tab-content.active{
             display: grid;
-            <!-- gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) -->
           }
           
           .elements-container {
-            display: flex;
-           justify-content: space-between;
-            gap: 0.5rem;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
           }
 
           .form-element{
             display: flex;
-           justify-content: space-between;
+            flex-direction: column;
             gap: 0.5rem;
           }
 
@@ -141,7 +139,7 @@ class ProductsForm extends HTMLElement {
           }
 
           .form-element-input{
-            <!-- width: 100%; -->
+            width: 100%; 
           }
 
           .form-element-input input{
@@ -156,7 +154,7 @@ class ProductsForm extends HTMLElement {
             background-color: hsl(215, 70%, 75%);
             color: hsl(0, 0%, 100%);
             padding: 0.2rem 0.5rem;
-            width: 400%;
+            width: 100%;
             border:none
           }
 
@@ -196,21 +194,14 @@ class ProductsForm extends HTMLElement {
 
                   <div class="form-element">
                     <div class="form-element-label">
-                      <label>Id</label>
+                      <label>Categoria</label>
                     </div>
                     <div class="form-element-input">
-                      <input type="number" name="id">
+                      <select name="productCategoryId">
+
+                      </select>
                     </div>
                   </div>
-
-                    <div class="form-element">
-                      <div class="form-element-label">
-                        <label>Categoria</label>
-                      </div>
-                      <div class="form-element-input">
-                        <select name="options"></select>
-                      </div>
-                    </div>
 
                   <div class="form-element">
                     <div class="form-element-label">
@@ -230,25 +221,89 @@ class ProductsForm extends HTMLElement {
                     </div>
                   </div>
                   
-                </div>
+                  <div class="form-element">
+                    <div class="form-element-label">
+                      <label>Precio</label>
+                    </div>
+                    <div class="form-element-input">
+                      <input type="number" name="basePrice">
+                    </div>
+                  </div>
 
+                  <div class="form-element">
+                    <div class="form-element-label">
+                      <label>Unidades</label>
+                    </div>
+                    <div class="form-element-input">
+                      <input type="number" name="units">
+                    </div>
+                  </div>
+
+                  <div class="form-element">
+                    <div class="form-element-label">
+                      <label>Unidades de medida</label>
+                    </div>
+                    <div class="form-element-input">
+                      <select name="measurementUnit">
+                        <option value="ml">ml</option>
+                        <option value="gr">gr</option>
+                        <option value="u">ud</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-element">
+                    <div class="form-element-label">
+                      <label>Medidas</label>
+                    </div>
+                    <div class="form-element-input">
+                      <input type="number" name="measurement">
+                    </div>
+                  </div>
+
+                  <div class="form-element">
+                    <div class="form-element-label">
+                      <label>Visible</label>
+                    </div>
+                    <div class="form-element-input">
+                      <select name="visible">
+                        <option value="1">Sí</option>
+                        <option value="0">No</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </div>
             </form>
           </div>
         </section>
         `
+    this.getProductCategories()
     this.renderStoreButton()
     this.renderResetButton()
     this.renderTabsButton()
   }
 
-  renderResetButton() {
+  async getProductCategories () {
+    const selectCategory = this.shadow.querySelector('select[name="productCategoryId"]')
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/product-categories`)
+    const data = await response.json()
+
+    data.rows.forEach(element => {
+      const categoria = document.createElement('option')
+      categoria.value = element.id
+      categoria.textContent = element.name
+      selectCategory.appendChild(categoria)
+    })
+  }
+
+  renderResetButton () {
     this.shadow.querySelector('.reset-button').addEventListener('click', async (event) => {
       this.resetForm()
     })
   }
 
-  renderTabsButton() {
+  renderTabsButton () {
     this.shadow.querySelector('.form').addEventListener('click', async (event) => {
       if (event.target.closest('.tab')) {
         const tab = event.target.closest('.tab')
@@ -263,7 +318,7 @@ class ProductsForm extends HTMLElement {
     })
   }
 
-  renderStoreButton() {
+  renderStoreButton () {
     this.shadow.querySelector('.store-button').addEventListener('click', async (event) => {
       event.preventDefault()
       const form = this.shadow.querySelector('form')
@@ -351,9 +406,13 @@ class ProductsForm extends HTMLElement {
 
   showElement = async element => {
     this.resetForm()
+
+    console.log(element)
     Object.entries(element).forEach(([key, value]) => {
       if (this.shadow.querySelector(`[name="${key}"]`)) {
-        this.shadow.querySelector(`[name="${key}"]`).value = value
+        if (this.shadow.querySelector(`[name="${key}"]`)) {
+          this.shadow.querySelector(`[name="${key}"]`).value = value
+        }
       }
     })
   }
